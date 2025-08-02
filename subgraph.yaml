@@ -1,0 +1,44 @@
+specVersion: 1.3.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: WaveFront
+    network: base-sepolia
+    source:
+      address: "0xe6e41bd765Ff3103fC3332F3E4f592C50AA5B37C"
+      abi: WaveFront
+      startBlock: 29190684
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - OwnershipTransferred
+        - WaveFront__ContentFactorySet
+        - WaveFront__RewarderFactorySet
+        - WaveFront__SaleFactorySet
+        - WaveFront__TokenCreated
+        - WaveFront__TokenFactorySet
+        - WaveFront__TreasurySet
+      abis:
+        - name: WaveFront
+          file: ./abis/WaveFront.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: WaveFront__ContentFactorySet(address)
+          handler: handleWaveFront__ContentFactorySet
+        - event: WaveFront__RewarderFactorySet(address)
+          handler: handleWaveFront__RewarderFactorySet
+        - event: WaveFront__SaleFactorySet(address)
+          handler: handleWaveFront__SaleFactorySet
+        - event: WaveFront__TokenCreated(uint256,address,address,address,address,string,string,string)
+          handler: handleWaveFront__TokenCreated
+        - event: WaveFront__TokenFactorySet(address)
+          handler: handleWaveFront__TokenFactorySet
+        - event: WaveFront__TreasurySet(address)
+          handler: handleWaveFront__TreasurySet
+      file: ./src/wave-front.ts

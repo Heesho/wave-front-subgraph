@@ -1,0 +1,63 @@
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WaveFront__ContentFactorySet @entity(immutable: true) {
+  id: Bytes!
+  newContentFactory: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WaveFront__RewarderFactorySet @entity(immutable: true) {
+  id: Bytes!
+  newRewarderFactory: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WaveFront__SaleFactorySet @entity(immutable: true) {
+  id: Bytes!
+  newSaleFactory: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WaveFront__TokenCreated @entity(immutable: true) {
+  id: Bytes!
+  index: BigInt! # uint256
+  token: Bytes! # address
+  sale: Bytes! # address
+  content: Bytes! # address
+  rewarder: Bytes! # address
+  name: String! # string
+  symbol: String! # string
+  uri: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WaveFront__TokenFactorySet @entity(immutable: true) {
+  id: Bytes!
+  newTokenFactory: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WaveFront__TreasurySet @entity(immutable: true) {
+  id: Bytes!
+  newTreasury: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

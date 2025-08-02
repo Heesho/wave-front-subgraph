@@ -1,0 +1,8 @@
+{
+  "base-sepolia": {
+    "WaveFront": {
+      "address": "0xe6e41bd765Ff3103fC3332F3E4f592C50AA5B37C",
+      "startBlock": 29190684
+    }
+  }
+}
