@@ -13,4 +13,11 @@ type User @entity {
 
 type Token @entity {
   id: ID!
+  name: String!
+  symbol: String!
+  uri: String!
+}
+
+type TokenPosition @entity {
+  id: ID!
 }
