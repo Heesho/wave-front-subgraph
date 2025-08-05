@@ -51,10 +51,10 @@ type User @entity(immutable: false) {
   creator: [Creator!]! @derivedFrom(field: "user")
 
   "A list of all Content NFTs (ERC721s) this user currently owns. Derived from the 'Content' entity."
-  contentOwned: [Content!]! @derivedFrom(field: "owner")
+  contentOwned: [ContentPosition!]! @derivedFrom(field: "owner")
 
   "A list of all Content NFTs this user originally created. Derived from the 'Content' entity."
-  contentCreated: [Content!]! @derivedFrom(field: "creator")
+  contentCreated: [ContentPosition!]! @derivedFrom(field: "creator")
 
   "A list of Token contracts where this user is the owner (e.g., from an Ownable contract). Derived from the 'Token' entity."
   tokensOwned: [Token!]! @derivedFrom(field: "owner")
@@ -83,7 +83,7 @@ type Token @entity(immutable: false) {
   tokenReserve: BigDecimal! # The amount of this token in the AMM pool.
   marketPrice: BigDecimal! # Current price of the token in quote currency.
   floorPrice: BigDecimal! # The initial price or a bonding curve floor price.
-  contributors: BigInt! # Count of unique contributors.
+  contribution: BigDecimal! # Total amount of quote currency contributed to the token.
   holders: BigInt! # Count of unique token holders.
   # --- Timestamps & Metadata ---
   createdAtTimestamp: BigInt!
@@ -99,7 +99,7 @@ type Token @entity(immutable: false) {
   creators: [Creator!]! @derivedFrom(field: "token")
 
   "A list of all Content NFTs associated with this token. Derived from the 'Content' entity."
-  contents: [Content!]! @derivedFrom(field: "token")
+  contentPositions: [ContentPosition!]! @derivedFrom(field: "token")
 
   "A list of all user positions in this token. Derived from the 'TokenPosition' entity."
   tokenPositions: [TokenPosition!]! @derivedFrom(field: "token")
@@ -109,11 +109,31 @@ type Token @entity(immutable: false) {
 # Join / Link Entities
 # ===============================================================
 
-"""
-A "join entity" that represents a single user's stake and earnings
-in a single token. This is how the many-to-many relationship
-between Users and Tokens (for holdings) is modeled.
-"""
+type Creator @entity(immutable: false) {
+  id: ID! # A composite ID, e.g., "${token.id}-${user.id}"
+  user: User! # The whitelisted user.
+  token: Token! # The token they are allowed to create content for.
+}
+
+type Sale @entity(immutable: false) {
+  id: ID!
+  token: Token!
+}
+
+type Content @entity(immutable: false) {
+  id: ID!
+  token: Token!
+}
+
+type Rewarder @entity(immutable: false) {
+  id: ID!
+  token: Token!
+}
+
+# ===============================================================
+# Position Entities
+# ===============================================================
+
 type TokenPosition @entity(immutable: false) {
   id: ID! # A composite ID, e.g., "${token.id}-${user.id}"
   token: Token! # The token being held.
@@ -129,25 +149,7 @@ type TokenPosition @entity(immutable: false) {
   curatorRevenueToken: BigDecimal!
 }
 
-"""
-A "join entity" that represents a single user's permission to create
-content for a single token. This is how the many-to-many relationship
-for creator whitelists is modeled.
-"""
-type Creator @entity(immutable: false) {
-  id: ID! # A composite ID, e.g., "${token.id}-${user.id}"
-  user: User! # The whitelisted user.
-  token: Token! # The token they are allowed to create content for.
-}
-
-# ===============================================================
-# Content NFT
-# ===============================================================
-
-"""
-Represents a single Content NFT (ERC721) associated with a Token.
-"""
-type Content @entity(immutable: false) {
+type ContentPosition @entity(immutable: false) {
   id: ID! # A composite ID, e.g., "${token.id}-${contentId}"
   contentId: BigInt! # The unique tokenId from the ERC721 contract.
   token: Token! # The parent Token this content belongs to.

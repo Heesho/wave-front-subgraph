@@ -1,5 +1,13 @@
 import { WaveFront__TokenCreated as WaveFront__TokenCreatedEvent } from "../generated/WaveFront/WaveFront";
-import { Directory, Token, TokenPosition, User } from "../generated/schema";
+import {
+  Directory,
+  Token,
+  TokenPosition,
+  User,
+  Sale,
+  Content,
+  Rewarder,
+} from "../generated/schema";
 import {
   WAVEFRONT_ADDRESS,
   ZERO_BI,
@@ -61,7 +69,7 @@ export function handleWaveFront__TokenCreated(
     token.tokenReserve = INITIAL_TOKEN_RESERVE;
     token.marketPrice = INITIAL_PRICE;
     token.floorPrice = INITIAL_PRICE;
-    token.contributors = ZERO_BI;
+    token.contribution = ZERO_BD;
     token.holders = ZERO_BI;
 
     token.createdAtTimestamp = event.block.timestamp;
@@ -78,6 +86,27 @@ export function handleWaveFront__TokenCreated(
 
   token.save();
 
+  let sale = Sale.load(event.params.token.toHexString());
+  if (sale == null) {
+    sale = new Sale(event.params.token.toHexString());
+    sale.token = event.params.token.toHexString();
+  }
+  sale.save();
+
+  let content = Content.load(event.params.token.toHexString());
+  if (content == null) {
+    content = new Content(event.params.token.toHexString());
+    content.token = event.params.token.toHexString();
+  }
+  content.save();
+
+  let rewarder = Rewarder.load(event.params.token.toHexString());
+  if (rewarder == null) {
+    rewarder = new Rewarder(event.params.token.toHexString());
+    rewarder.token = event.params.token.toHexString();
+  }
+  rewarder.save();
+
   let tokenPosition = TokenPosition.load(
     event.params.token.toHexString() + "-" + event.params.owner.toHexString()
   );
@@ -85,7 +114,6 @@ export function handleWaveFront__TokenCreated(
     tokenPosition = new TokenPosition(
       event.params.token.toHexString() + "-" + event.params.owner.toHexString()
     );
-
     tokenPosition.token = event.params.token.toHexString();
     tokenPosition.user = event.params.owner.toHexString();
     tokenPosition.contribution = ZERO_BD;
@@ -95,7 +123,7 @@ export function handleWaveFront__TokenCreated(
     tokenPosition.affiliateRevenueToken = ZERO_BD;
     tokenPosition.curatorRevenueQuote = ZERO_BD;
     tokenPosition.curatorRevenueToken = ZERO_BD;
-
-    tokenPosition.save();
   }
+
+  tokenPosition.save();
 }

@@ -20,6 +20,9 @@ dataSources:
         - User
         - Token
         - TokenPosition
+        - Sale
+        - Content
+        - Rewarder
       abis:
         - name: WaveFront
           file: ./abis/WaveFront.json
