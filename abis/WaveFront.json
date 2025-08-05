@@ -144,6 +144,12 @@
         "internalType": "address",
         "name": "owner",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isPrivate",
+        "type": "bool"
       }
     ],
     "name": "WaveFront__TokenCreated",

@@ -8,7 +8,7 @@ dataSources:
     name: WaveFront
     network: base-sepolia
     source:
-      address: "0xe6e41bd765Ff3103fC3332F3E4f592C50AA5B37C"
+      address: "0x3ea169bc579bF24673428bC710b22F06a8F4ff60"
       abi: WaveFront
       startBlock: 29190684
     mapping:
@@ -18,10 +18,38 @@ dataSources:
       entities:
         - Directory
         - User
+        - Token
+        - TokenPosition
       abis:
         - name: WaveFront
           file: ./abis/WaveFront.json
       eventHandlers:
-        - event: WaveFront__TokenCreated(string,string,string,uint256,address,address,address,address,indexed address)
+        - event: WaveFront__TokenCreated(string,string,string,uint256,address,address,address,address,indexed address,bool)
           handler: handleWaveFront__TokenCreated
       file: ./src/wave-front.ts
+templates:
+  - kind: ethereum
+    name: Sale
+    network: base-sepolia
+    source:
+      abi: Sale
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Directory
+          - User
+        - Token
+        - TokenPosition
+      abis:
+        - name: Sale
+          file: ./abis/Sale.json
+      eventHandlers:
+        - event: Sale__Contributed(indexed address,indexed address,uint256)
+          handler: handleSale__Contributed
+        - event: Sale__MarketOpened(uint256,uint256)
+          handler: handleSale__MarketOpened
+        - event: Sale__Redeemed(indexed address,indexed address,uint256)
+          handler: handleSale__Redeemed
+      file: ./src/sale.ts
