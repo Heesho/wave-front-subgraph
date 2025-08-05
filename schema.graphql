@@ -1,23 +1,46 @@
-type Directory @entity {
+type Directory @entity(immutable: false) {
   id: ID!
   index: BigInt!
   txCount: BigInt!
-  totalVolume: BigDecimal!
-  totalLiquidity: BigDecimal!
+  volume: BigDecimal!
+  liquidity: BigDecimal!
   totalRevenue: BigDecimal!
 }
 
-type User @entity {
+type User @entity(immutable: false) {
   id: ID!
+  txCount: BigInt!
 }
 
-type Token @entity {
+type Token @entity(immutable: false) {
   id: ID!
   name: String!
   symbol: String!
   uri: String!
+
+  txCount: BigInt!
+  volume: BigDecimal!
+  liquidity: BigDecimal!
+
+  totalSupply: BigDecimal!
+  marketCap: BigDecimal!
+  quoteReserve: BigDecimal!
+  tokenReserve: BigDecimal!
+
+  marketPrice: BigDecimal!
+  floorPrice: BigDecimal!
+
+  contributors: BigInt!
+  holders: BigInt!
+
+  createdAtTimestamp: BigInt!
+  createdAtBlockNumber: BigInt!
+  owner: Bytes!
+
+  marketOpen: Boolean!
+  marketOpensAt: BigInt!
 }
 
-type TokenPosition @entity {
+type TokenPosition @entity(immutable: false) {
   id: ID!
 }

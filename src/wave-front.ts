@@ -1,131 +1,78 @@
+import { WaveFront__TokenCreated as WaveFront__TokenCreatedEvent } from "../generated/WaveFront/WaveFront";
+import { Directory, Token, User } from "../generated/schema";
 import {
-  OwnershipTransferred as OwnershipTransferredEvent,
-  WaveFront__ContentFactorySet as WaveFront__ContentFactorySetEvent,
-  WaveFront__RewarderFactorySet as WaveFront__RewarderFactorySetEvent,
-  WaveFront__SaleFactorySet as WaveFront__SaleFactorySetEvent,
-  WaveFront__TokenCreated as WaveFront__TokenCreatedEvent,
-  WaveFront__TokenFactorySet as WaveFront__TokenFactorySetEvent,
-  WaveFront__TreasurySet as WaveFront__TreasurySetEvent
-} from "../generated/WaveFront/WaveFront"
-import {
-  OwnershipTransferred,
-  WaveFront__ContentFactorySet,
-  WaveFront__RewarderFactorySet,
-  WaveFront__SaleFactorySet,
-  WaveFront__TokenCreated,
-  WaveFront__TokenFactorySet,
-  WaveFront__TreasurySet
-} from "../generated/schema"
-
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
-): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleWaveFront__ContentFactorySet(
-  event: WaveFront__ContentFactorySetEvent
-): void {
-  let entity = new WaveFront__ContentFactorySet(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.newContentFactory = event.params.newContentFactory
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleWaveFront__RewarderFactorySet(
-  event: WaveFront__RewarderFactorySetEvent
-): void {
-  let entity = new WaveFront__RewarderFactorySet(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.newRewarderFactory = event.params.newRewarderFactory
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleWaveFront__SaleFactorySet(
-  event: WaveFront__SaleFactorySetEvent
-): void {
-  let entity = new WaveFront__SaleFactorySet(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.newSaleFactory = event.params.newSaleFactory
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
+  WAVEFRONT_ADDRESS,
+  ZERO_BI,
+  ONE_BI,
+  ZERO_BD,
+  INITIAL_LIQUIDITY,
+  INITIAL_MARKET_CAP,
+  INITIAL_TOTAL_SUPPLY,
+  INITIAL_PRICE,
+  INITIAL_QUOTE_RESERVE,
+  INITIAL_TOKEN_RESERVE,
+  SALE_DURATION,
+} from "./constants";
 
 export function handleWaveFront__TokenCreated(
   event: WaveFront__TokenCreatedEvent
 ): void {
-  let entity = new WaveFront__TokenCreated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.index = event.params.index
-  entity.token = event.params.token
-  entity.sale = event.params.sale
-  entity.content = event.params.content
-  entity.rewarder = event.params.rewarder
-  entity.name = event.params.name
-  entity.symbol = event.params.symbol
-  entity.uri = event.params.uri
+  let directory = Directory.load(WAVEFRONT_ADDRESS);
+  if (directory == null) {
+    directory = new Directory(WAVEFRONT_ADDRESS);
+    directory.index = ZERO_BI;
+    directory.txCount = ZERO_BI;
+    directory.volume = ZERO_BD;
+    directory.liquidity = ZERO_BD;
+    directory.totalRevenue = ZERO_BD;
+  }
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  directory.index = directory.index.plus(ONE_BI);
+  directory.txCount = directory.txCount.plus(ONE_BI);
 
-  entity.save()
-}
+  directory.save();
 
-export function handleWaveFront__TokenFactorySet(
-  event: WaveFront__TokenFactorySetEvent
-): void {
-  let entity = new WaveFront__TokenFactorySet(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.newTokenFactory = event.params.newTokenFactory
+  let user = User.load(event.params.owner.toHexString());
+  if (user == null) {
+    user = new User(event.params.owner.toHexString());
+    user.txCount = ZERO_BI;
+  }
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  user.txCount = user.txCount.plus(ONE_BI);
 
-  entity.save()
-}
+  user.save();
 
-export function handleWaveFront__TreasurySet(
-  event: WaveFront__TreasurySetEvent
-): void {
-  let entity = new WaveFront__TreasurySet(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.newTreasury = event.params.newTreasury
+  let token = Token.load(event.params.token.toHexString());
+  if (token == null) {
+    token = new Token(event.params.token.toHexString());
+    token.name = event.params.name;
+    token.symbol = event.params.symbol;
+    token.uri = event.params.uri;
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+    token.txCount = ZERO_BI;
+    token.volume = ZERO_BD;
+    token.liquidity = INITIAL_LIQUIDITY;
 
-  entity.save()
+    token.totalSupply = INITIAL_TOTAL_SUPPLY;
+    token.marketCap = INITIAL_MARKET_CAP;
+    token.quoteReserve = INITIAL_QUOTE_RESERVE;
+    token.tokenReserve = INITIAL_TOKEN_RESERVE;
+
+    token.marketPrice = INITIAL_PRICE;
+    token.floorPrice = INITIAL_PRICE;
+
+    token.contributors = ZERO_BI;
+    token.holders = ZERO_BI;
+
+    token.createdAtTimestamp = event.block.timestamp;
+    token.createdAtBlockNumber = event.block.number;
+    token.owner = event.params.owner;
+
+    token.marketOpen = false;
+    token.marketOpensAt = event.block.timestamp.plus(SALE_DURATION);
+  }
+
+  token.txCount = token.txCount.plus(ONE_BI);
+
+  token.save();
 }

@@ -16,29 +16,12 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - OwnershipTransferred
-        - WaveFront__ContentFactorySet
-        - WaveFront__RewarderFactorySet
-        - WaveFront__SaleFactorySet
-        - WaveFront__TokenCreated
-        - WaveFront__TokenFactorySet
-        - WaveFront__TreasurySet
+        - Directory
+        - User
       abis:
         - name: WaveFront
           file: ./abis/WaveFront.json
       eventHandlers:
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: WaveFront__ContentFactorySet(address)
-          handler: handleWaveFront__ContentFactorySet
-        - event: WaveFront__RewarderFactorySet(address)
-          handler: handleWaveFront__RewarderFactorySet
-        - event: WaveFront__SaleFactorySet(address)
-          handler: handleWaveFront__SaleFactorySet
-        - event: WaveFront__TokenCreated(uint256,address,address,address,address,string,string,string)
+        - event: WaveFront__TokenCreated(string,string,string,uint256,address,address,address,address,indexed address)
           handler: handleWaveFront__TokenCreated
-        - event: WaveFront__TokenFactorySet(address)
-          handler: handleWaveFront__TokenFactorySet
-        - event: WaveFront__TreasurySet(address)
-          handler: handleWaveFront__TreasurySet
       file: ./src/wave-front.ts
