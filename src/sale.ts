@@ -59,6 +59,7 @@ export function handleSale__Contributed(event: Sale__ContributedEvent): void {
     tokenPosition.balance = ZERO_BD;
     tokenPosition.debt = ZERO_BD;
     tokenPosition.creatorRevenueQuote = ZERO_BD;
+    tokenPosition.ownerRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueToken = ZERO_BD;
     tokenPosition.curatorRevenueQuote = ZERO_BD;
@@ -109,6 +110,7 @@ export function handleSale__Redeemed(event: Sale__RedeemedEvent): void {
     tokenPosition.balance = ZERO_BD;
     tokenPosition.debt = ZERO_BD;
     tokenPosition.creatorRevenueQuote = ZERO_BD;
+    tokenPosition.ownerRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueToken = ZERO_BD;
     tokenPosition.curatorRevenueQuote = ZERO_BD;

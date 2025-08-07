@@ -59,6 +59,7 @@ export function handleToken__Transfer(event: TransferEvent): void {
     whoTokenPosition.balance = ZERO_BD;
     whoTokenPosition.debt = ZERO_BD;
     whoTokenPosition.creatorRevenueQuote = ZERO_BD;
+    whoTokenPosition.ownerRevenueQuote = ZERO_BD;
     whoTokenPosition.affiliateRevenueQuote = ZERO_BD;
     whoTokenPosition.affiliateRevenueToken = ZERO_BD;
     whoTokenPosition.curatorRevenueQuote = ZERO_BD;
@@ -85,6 +86,7 @@ export function handleToken__Transfer(event: TransferEvent): void {
     toTokenPosition.balance = ZERO_BD;
     toTokenPosition.debt = ZERO_BD;
     toTokenPosition.creatorRevenueQuote = ZERO_BD;
+    toTokenPosition.ownerRevenueQuote = ZERO_BD;
     toTokenPosition.affiliateRevenueQuote = ZERO_BD;
     toTokenPosition.affiliateRevenueToken = ZERO_BD;
     toTokenPosition.curatorRevenueQuote = ZERO_BD;
@@ -108,20 +110,20 @@ export function handleToken__Transfer(event: TransferEvent): void {
 export function handleToken__Swap(event: Token__SwapEvent): void {
   let directory = Directory.load(WAVEFRONT_ADDRESS)!;
   directory.txCount = directory.txCount.plus(ONE_BI);
-  directory.volume = directory.volume.plus(
+  directory.swapVolume = directory.swapVolume.plus(
     convertTokenToDecimal(event.params.quoteInRaw, BigInt.fromI32(6))
   );
-  directory.volume = directory.volume.plus(
+  directory.swapVolume = directory.swapVolume.plus(
     convertTokenToDecimal(event.params.quoteOutRaw, BigInt.fromI32(6))
   );
   directory.save();
 
   let token = Token.load(event.address.toHexString())!;
   token.txCount = token.txCount.plus(ONE_BI);
-  token.volume = token.volume.plus(
+  token.swapVolume = token.swapVolume.plus(
     convertTokenToDecimal(event.params.quoteInRaw, BigInt.fromI32(6))
   );
-  token.volume = token.volume.plus(
+  token.swapVolume = token.swapVolume.plus(
     convertTokenToDecimal(event.params.quoteOutRaw, BigInt.fromI32(6))
   );
   token.save();
@@ -319,6 +321,7 @@ export function handleToken__ProviderFee(event: Token__ProviderFeeEvent): void {
     tokenPosition.balance = ZERO_BD;
     tokenPosition.debt = ZERO_BD;
     tokenPosition.creatorRevenueQuote = ZERO_BD;
+    tokenPosition.ownerRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueToken = ZERO_BD;
     tokenPosition.curatorRevenueQuote = ZERO_BD;

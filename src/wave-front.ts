@@ -2,6 +2,8 @@ import { WaveFront__TokenCreated as WaveFront__TokenCreatedEvent } from "../gene
 import {
   Token as TokenTemplate,
   Sale as SaleTemplate,
+  Content as ContentTemplate,
+  Rewarder as RewarderTemplate,
 } from "../generated/templates";
 import {
   Directory,
@@ -35,8 +37,10 @@ export function handleWaveFront__TokenCreated(
     directory = new Directory(WAVEFRONT_ADDRESS);
     directory.index = ZERO_BI;
     directory.txCount = ZERO_BI;
-    directory.volume = ZERO_BD;
+    directory.swapVolume = ZERO_BD;
     directory.liquidity = ZERO_BD;
+    directory.curateVolume = ZERO_BD;
+    directory.contents = ZERO_BI;
   }
   directory.index = directory.index.plus(ONE_BI);
   directory.txCount = directory.txCount.plus(ONE_BI);
@@ -62,7 +66,7 @@ export function handleWaveFront__TokenCreated(
     token.owner = event.params.owner.toHexString();
 
     token.txCount = ZERO_BI;
-    token.volume = ZERO_BD;
+    token.swapVolume = ZERO_BD;
     token.liquidity = INITIAL_LIQUIDITY;
     token.totalSupply = INITIAL_TOTAL_SUPPLY;
     token.marketCap = INITIAL_MARKET_CAP;
@@ -73,6 +77,9 @@ export function handleWaveFront__TokenCreated(
     token.floorPrice = INITIAL_PRICE;
     token.contribution = ZERO_BD;
     token.holders = ZERO_BI;
+
+    token.contents = ZERO_BI;
+    token.curateVolume = ZERO_BD;
 
     token.treasuryRevenueQuote = ZERO_BD;
     token.treasuryRevenueToken = ZERO_BD;
@@ -101,16 +108,18 @@ export function handleWaveFront__TokenCreated(
   }
   sale.save();
 
-  let content = Content.load(event.params.token.toHexString());
+  ContentTemplate.create(event.params.content);
+  let content = Content.load(event.params.content.toHexString());
   if (content == null) {
-    content = new Content(event.params.token.toHexString());
-    content.token = event.params.token.toHexString();
+    content = new Content(event.params.content.toHexString());
   }
+  content.token = event.params.token.toHexString();
   content.save();
 
-  let rewarder = Rewarder.load(event.params.token.toHexString());
+  RewarderTemplate.create(event.params.rewarder);
+  let rewarder = Rewarder.load(event.params.rewarder.toHexString());
   if (rewarder == null) {
-    rewarder = new Rewarder(event.params.token.toHexString());
+    rewarder = new Rewarder(event.params.rewarder.toHexString());
     rewarder.token = event.params.token.toHexString();
   }
   rewarder.save();
@@ -128,6 +137,7 @@ export function handleWaveFront__TokenCreated(
     tokenPosition.balance = ZERO_BD;
     tokenPosition.debt = ZERO_BD;
     tokenPosition.creatorRevenueQuote = ZERO_BD;
+    tokenPosition.ownerRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueToken = ZERO_BD;
     tokenPosition.curatorRevenueQuote = ZERO_BD;

@@ -12,6 +12,11 @@
         "type": "string"
       },
       {
+        "internalType": "string",
+        "name": "_coverUri",
+        "type": "string"
+      },
+      {
         "internalType": "address",
         "name": "_token",
         "type": "address"
@@ -122,6 +127,19 @@
       }
     ],
     "name": "BatchMetadataUpdate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "coverUri",
+        "type": "string"
+      }
+    ],
+    "name": "Content__CoverUriSet",
     "type": "event"
   },
   {
@@ -352,6 +370,19 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "coverUri",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -675,6 +706,19 @@
       }
     ],
     "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_coverUri",
+        "type": "string"
+      }
+    ],
+    "name": "setCoverUri",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

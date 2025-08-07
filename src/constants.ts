@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts/index";
+import { BigDecimal, BigInt } from "@graphprotocol/graph-ts/index";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 export const WAVEFRONT_ADDRESS = "0xB1e7fAec47EddC3E9996Bf01488B409D0A853DE8";

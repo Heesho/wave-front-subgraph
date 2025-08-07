@@ -2,21 +2,27 @@ type Directory @entity(immutable: false) {
   id: ID!
   index: BigInt!
   txCount: BigInt!
-  volume: BigDecimal!
+  swapVolume: BigDecimal!
   liquidity: BigDecimal!
+  curateVolume: BigDecimal!
+  contents: BigInt!
 }
 
 type User @entity(immutable: false) {
   id: ID!
   txCount: BigInt!
+
   referrer: User
   referrals: [User!]! @derivedFrom(field: "referrer")
-  creator: [Creator!]! @derivedFrom(field: "user")
-  contentOwned: [ContentPosition!]! @derivedFrom(field: "owner")
-  contentCreated: [ContentPosition!]! @derivedFrom(field: "creator")
+
   tokensOwned: [Token!]! @derivedFrom(field: "owner")
   tokenPositions: [TokenPosition!]! @derivedFrom(field: "user")
   swaps: [Swap!]! @derivedFrom(field: "user")
+
+  creator: [Creator!]! @derivedFrom(field: "user")
+  contentOwned: [ContentPosition!]! @derivedFrom(field: "owner")
+  contentCreated: [ContentPosition!]! @derivedFrom(field: "creator")
+  curates: [Curate!]! @derivedFrom(field: "user")
 }
 
 type Token @entity(immutable: false) {
@@ -27,7 +33,7 @@ type Token @entity(immutable: false) {
   owner: User!
 
   txCount: BigInt!
-  volume: BigDecimal!
+  swapVolume: BigDecimal!
   liquidity: BigDecimal!
   totalSupply: BigDecimal!
   marketCap: BigDecimal!
@@ -38,6 +44,9 @@ type Token @entity(immutable: false) {
   floorPrice: BigDecimal!
   contribution: BigDecimal!
   holders: BigInt!
+
+  contents: BigInt!
+  curateVolume: BigDecimal!
 
   treasuryRevenueQuote: BigDecimal!
   treasuryRevenueToken: BigDecimal!
@@ -51,16 +60,15 @@ type Token @entity(immutable: false) {
 
   isPrivate: Boolean!
 
-  creators: [Creator!]! @derivedFrom(field: "token")
-
-  contentPositions: [ContentPosition!]! @derivedFrom(field: "token")
-
   tokenPositions: [TokenPosition!]! @derivedFrom(field: "token")
-
   swaps: [Swap!]! @derivedFrom(field: "token")
   tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
   tokenHourData: [TokenHourData!]! @derivedFrom(field: "token")
   tokenMinuteData: [TokenMinuteData!]! @derivedFrom(field: "token")
+
+  creators: [Creator!]! @derivedFrom(field: "token")
+  contentPositions: [ContentPosition!]! @derivedFrom(field: "token")
+  curates: [Curate!]! @derivedFrom(field: "token")
 }
 
 type TokenPosition @entity(immutable: false) {
@@ -71,20 +79,11 @@ type TokenPosition @entity(immutable: false) {
   balance: BigDecimal!
   debt: BigDecimal!
   creatorRevenueQuote: BigDecimal!
+  ownerRevenueQuote: BigDecimal!
   affiliateRevenueQuote: BigDecimal!
   affiliateRevenueToken: BigDecimal!
   curatorRevenueQuote: BigDecimal!
   curatorRevenueToken: BigDecimal!
-}
-
-type ContentPosition @entity(immutable: false) {
-  id: ID!
-  contentId: BigInt!
-  token: Token!
-  creator: User!
-  owner: User!
-  price: BigDecimal!
-  nextPrice: BigDecimal!
 }
 
 type Swap @entity(immutable: false) {
@@ -128,10 +127,35 @@ type TokenMinuteData @entity(immutable: false) {
   volume: BigDecimal!
 }
 
+type ContentPosition @entity(immutable: false) {
+  id: ID!
+  contentId: BigInt!
+  token: Token!
+  creator: User!
+  owner: User!
+  tokenId: BigInt!
+  uri: String!
+  price: BigDecimal!
+  nextPrice: BigDecimal!
+}
+
+type Curate @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  creator: User!
+  prevOwner: User!
+  user: User!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  price: BigDecimal!
+  surplus: BigDecimal!
+}
+
 type Creator @entity(immutable: false) {
   id: ID!
   user: User!
   token: Token!
+  isCreator: Boolean!
 }
 
 type Sale @entity(immutable: false) {

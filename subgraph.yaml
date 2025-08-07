@@ -95,3 +95,57 @@ templates:
         - event: Token__Repay(indexed address,indexed address,uint256)
           handler: handleToken__Repay
       file: ./src/token.ts
+  - kind: ethereum
+    name: Content
+    network: base-sepolia
+    source:
+      abi: Content
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Directory
+        - User
+        - Token
+      abis:
+        - name: Content
+          file: ./abis/Content.json
+      eventHandlers:
+        - event: Content__Created(indexed address,indexed address,indexed uint256,string)
+          handler: handleContent__Created
+        - event: Content__Curated(indexed address,indexed address,indexed uint256,uint256)
+          handler: handleContent__Curated
+        - event: Content__CoverUriSet(string)
+          handler: handleContent__CoverUriSet
+        - event: Content__IsPrivateSet(bool)
+          handler: handleContent__IsPrivateSet
+        - event: Content__CreatorsSet(indexed address,bool)
+          handler: handleContent__CreatorsSet
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleContent__OwnershipTransferred
+      file: ./src/content.ts
+  - kind: ethereum
+    name: Rewarder
+    network: base-sepolia
+    source:
+      abi: Rewarder
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Directory
+        - User
+        - Token
+      abis:
+        - name: Rewarder
+          file: ./abis/Rewarder.json
+      eventHandlers:
+        - event: Rewarder__Deposited(indexed address,uint256)
+          handler: handleRewarder__Deposited
+        - event: Rewarder__Withdrawn(indexed address,uint256)
+          handler: handleRewarder__Withdrawn
+        - event: Rewarder__RewardPaid(indexed address,indexed address,uint256)
+          handler: handleRewarder__RewardPaid
+      file: ./src/rewarder.ts
