@@ -103,7 +103,6 @@ export function handleToken__Transfer(event: TransferEvent): void {
     token.holders = token.holders.plus(ONE_BI);
   }
   toTokenPosition.save();
-
   token.save();
 }
 
@@ -117,6 +116,23 @@ export function handleToken__Swap(event: Token__SwapEvent): void {
     convertTokenToDecimal(event.params.quoteOutRaw, BigInt.fromI32(6))
   );
   directory.save();
+
+  let userWho = User.load(event.params.from.toHexString());
+  if (userWho == null) {
+    userWho = new User(event.params.from.toHexString());
+    userWho.txCount = ZERO_BI;
+    userWho.referrer = ADDRESS_ZERO;
+  }
+  userWho.txCount = userWho.txCount.plus(ONE_BI);
+  userWho.save();
+
+  let userTo = User.load(event.params.to.toHexString());
+  if (userTo == null) {
+    userTo = new User(event.params.to.toHexString());
+    userTo.txCount = ZERO_BI;
+    userTo.referrer = ADDRESS_ZERO;
+    userTo.save();
+  }
 
   let token = Token.load(event.address.toHexString())!;
   token.txCount = token.txCount.plus(ONE_BI);
@@ -361,13 +377,22 @@ export function handleToken__ContentFee(event: Token__ContentFeeEvent): void {
 }
 
 export function handleToken__Borrow(event: Token__BorrowEvent): void {
-  let user = User.load(event.params.to.toHexString());
-  if (user == null) {
-    user = new User(event.params.to.toHexString());
-    user.txCount = ZERO_BI;
-    user.referrer = ADDRESS_ZERO;
+  let userWho = User.load(event.params.who.toHexString());
+  if (userWho == null) {
+    userWho = new User(event.params.who.toHexString());
+    userWho.txCount = ZERO_BI;
+    userWho.referrer = ADDRESS_ZERO;
   }
-  user.save();
+  userWho.txCount = userWho.txCount.plus(ONE_BI);
+  userWho.save();
+
+  let userTo = User.load(event.params.to.toHexString());
+  if (userTo == null) {
+    userTo = new User(event.params.to.toHexString());
+    userTo.txCount = ZERO_BI;
+    userTo.referrer = ADDRESS_ZERO;
+  }
+  userTo.save();
 
   let tokenPosition = TokenPosition.load(
     event.address.toHexString() + "-" + event.params.who.toHexString()
@@ -376,16 +401,33 @@ export function handleToken__Borrow(event: Token__BorrowEvent): void {
     convertTokenToDecimal(event.params.quoteRaw, BigInt.fromI32(18))
   );
   tokenPosition.save();
+
+  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  directory.txCount = directory.txCount.plus(ONE_BI);
+  directory.save();
+
+  let token = Token.load(event.address.toHexString())!;
+  token.txCount = token.txCount.plus(ONE_BI);
+  token.save();
 }
 
 export function handleToken__Repay(event: Token__RepayEvent): void {
-  let user = User.load(event.params.to.toHexString());
-  if (user == null) {
-    user = new User(event.params.who.toHexString());
-    user.txCount = ZERO_BI;
-    user.referrer = ADDRESS_ZERO;
+  let userWho = User.load(event.params.who.toHexString());
+  if (userWho == null) {
+    userWho = new User(event.params.who.toHexString());
+    userWho.txCount = ZERO_BI;
+    userWho.referrer = ADDRESS_ZERO;
   }
-  user.save();
+  userWho.txCount = userWho.txCount.plus(ONE_BI);
+  userWho.save();
+
+  let userTo = User.load(event.params.to.toHexString());
+  if (userTo == null) {
+    userTo = new User(event.params.to.toHexString());
+    userTo.txCount = ZERO_BI;
+    userTo.referrer = ADDRESS_ZERO;
+  }
+  userTo.save();
 
   let tokenPosition = TokenPosition.load(
     event.address.toHexString() + "-" + event.params.to.toHexString()
@@ -394,4 +436,12 @@ export function handleToken__Repay(event: Token__RepayEvent): void {
     convertTokenToDecimal(event.params.quoteRaw, BigInt.fromI32(18))
   );
   tokenPosition.save();
+
+  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  directory.txCount = directory.txCount.plus(ONE_BI);
+  directory.save();
+
+  let token = Token.load(event.address.toHexString())!;
+  token.txCount = token.txCount.plus(ONE_BI);
+  token.save();
 }

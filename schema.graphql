@@ -69,6 +69,9 @@ type Token @entity(immutable: false) {
   creators: [Creator!]! @derivedFrom(field: "token")
   contentPositions: [ContentPosition!]! @derivedFrom(field: "token")
   curates: [Curate!]! @derivedFrom(field: "token")
+  contentDayData: [ContentDayData!]! @derivedFrom(field: "token")
+  contentHourData: [ContentHourData!]! @derivedFrom(field: "token")
+  contentMinuteData: [ContentMinuteData!]! @derivedFrom(field: "token")
 }
 
 type TokenPosition @entity(immutable: false) {
@@ -148,6 +151,30 @@ type Curate @entity(immutable: false) {
   blockNumber: BigInt!
   timestamp: BigInt!
   price: BigDecimal!
+  surplus: BigDecimal!
+}
+
+type ContentDayData @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  timestamp: BigInt!
+  volume: BigDecimal!
+  surplus: BigDecimal!
+}
+
+type ContentHourData @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  timestamp: BigInt!
+  volume: BigDecimal!
+  surplus: BigDecimal!
+}
+
+type ContentMinuteData @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  timestamp: BigInt!
+  volume: BigDecimal!
   surplus: BigDecimal!
 }
 

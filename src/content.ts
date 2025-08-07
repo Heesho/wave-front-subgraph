@@ -15,6 +15,10 @@ import {
   ContentPosition,
   TokenPosition,
   Creator,
+  Curate,
+  ContentDayData,
+  ContentHourData,
+  ContentMinuteData,
 } from "../generated/schema";
 import {
   ZERO_BI,
@@ -32,8 +36,9 @@ export function handleContent__Created(event: Content__CreatedEvent): void {
     userWho = new User(event.params.who.toHex());
     userWho.txCount = ZERO_BI;
     userWho.referrer = ADDRESS_ZERO;
-    userWho.save();
   }
+  userWho.txCount = userWho.txCount.plus(ONE_BI);
+  userWho.save();
 
   let userTo = User.load(event.params.to.toHex());
   if (!userTo) {
@@ -45,11 +50,13 @@ export function handleContent__Created(event: Content__CreatedEvent): void {
 
   let directory = Directory.load(WAVEFRONT_ADDRESS)!;
   directory.contents = directory.contents.plus(ONE_BI);
+  directory.txCount = directory.txCount.plus(ONE_BI);
   directory.save();
 
   let content = Content.load(event.address.toHexString())!;
   let token = Token.load(content.token)!;
   token.contents = token.contents.plus(ONE_BI);
+  token.txCount = token.txCount.plus(ONE_BI);
   token.save();
 
   let contentPosition = new ContentPosition(
@@ -71,8 +78,9 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
     userWho = new User(event.params.who.toHex());
     userWho.txCount = ZERO_BI;
     userWho.referrer = ADDRESS_ZERO;
-    userWho.save();
   }
+  userWho.txCount = userWho.txCount.plus(ONE_BI);
+  userWho.save();
 
   let userTo = User.load(event.params.to.toHex());
   if (!userTo) {
@@ -86,6 +94,7 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
   directory.curateVolume = directory.curateVolume.plus(
     convertTokenToDecimal(event.params.price, BigInt.fromI32(6))
   );
+  directory.txCount = directory.txCount.plus(ONE_BI);
   directory.save();
 
   let content = Content.load(event.address.toHexString())!;
@@ -93,6 +102,7 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
   token.curateVolume = token.curateVolume.plus(
     convertTokenToDecimal(event.params.price, BigInt.fromI32(6))
   );
+  token.txCount = token.txCount.plus(ONE_BI);
   token.save();
 
   let contentPosition = ContentPosition.load(
@@ -160,6 +170,64 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
       surplus.div(BigDecimal.fromString("3"))
     );
   ownerTokenPosition.save();
+
+  let curate = new Curate(event.transaction.hash.toHexString());
+  curate.token = content.token;
+  curate.creator = contentPosition.creator;
+  curate.prevOwner = prevOwner;
+  curate.user = userTo.id;
+  curate.blockNumber = event.block.number;
+  curate.timestamp = event.block.timestamp;
+  curate.price = contentPosition.price;
+  curate.surplus = surplus;
+  curate.save();
+
+  let timestamp = event.block.timestamp.toI32();
+
+  let dayIndex = timestamp / 86400;
+  let dayStartTimestamp = dayIndex * 86400;
+  let dayContentId = token.id + "-" + dayIndex.toString();
+  let dayContent = ContentDayData.load(dayContentId);
+  if (dayContent == null) {
+    dayContent = new ContentDayData(dayContentId);
+    dayContent.token = token.id;
+    dayContent.timestamp = BigInt.fromI32(dayStartTimestamp);
+    dayContent.volume = ZERO_BD;
+    dayContent.surplus = ZERO_BD;
+  }
+  dayContent.volume = dayContent.volume.plus(curate.price);
+  dayContent.surplus = dayContent.surplus.plus(surplus);
+  dayContent.save();
+
+  let hourIndex = timestamp / 3600;
+  let hourStartTimestamp = hourIndex * 3600;
+  let hourContentId = token.id + "-" + hourIndex.toString();
+  let hourContent = ContentHourData.load(hourContentId);
+  if (hourContent == null) {
+    hourContent = new ContentHourData(hourContentId);
+    hourContent.token = token.id;
+    hourContent.timestamp = BigInt.fromI32(hourStartTimestamp);
+    hourContent.volume = ZERO_BD;
+    hourContent.surplus = ZERO_BD;
+  }
+  hourContent.volume = hourContent.volume.plus(curate.price);
+  hourContent.surplus = hourContent.surplus.plus(surplus);
+  hourContent.save();
+
+  let minuteIndex = timestamp / 60;
+  let minuteStartTimestamp = minuteIndex * 60;
+  let minuteContentId = token.id + "-" + minuteIndex.toString();
+  let minuteContent = ContentMinuteData.load(minuteContentId);
+  if (minuteContent == null) {
+    minuteContent = new ContentMinuteData(minuteContentId);
+    minuteContent.token = token.id;
+    minuteContent.timestamp = BigInt.fromI32(minuteStartTimestamp);
+    minuteContent.volume = ZERO_BD;
+    minuteContent.surplus = ZERO_BD;
+  }
+  minuteContent.volume = minuteContent.volume.plus(curate.price);
+  minuteContent.surplus = minuteContent.surplus.plus(surplus);
+  minuteContent.save();
 }
 
 export function handleContent__CoverUriSet(

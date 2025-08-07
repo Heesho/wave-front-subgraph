@@ -92,12 +92,8 @@ export function handleWaveFront__TokenCreated(
     token.marketOpensAt = event.block.timestamp.plus(SALE_DURATION);
 
     token.isPrivate = event.params.isPrivate;
-
-    token.save();
   }
-
   token.txCount = token.txCount.plus(ONE_BI);
-
   token.save();
 
   SaleTemplate.create(event.params.sale);
@@ -143,6 +139,5 @@ export function handleWaveFront__TokenCreated(
     tokenPosition.curatorRevenueQuote = ZERO_BD;
     tokenPosition.curatorRevenueToken = ZERO_BD;
   }
-
   tokenPosition.save();
 }
