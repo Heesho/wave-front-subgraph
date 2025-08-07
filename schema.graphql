@@ -1,118 +1,137 @@
-# ===============================================================
-# Global Platform-Wide Data
-# ===============================================================
-
-"""
-Stores aggregate, platform-wide statistics. There will only ever be
-one Directory entity, with a constant ID (e.g., "1").
-"""
 type Directory @entity(immutable: false) {
-  id: ID! # Always "1"
-  "Total number of Tokens created on the platform."
+  id: ID!
   index: BigInt!
-
-  "Total number of transactions across the entire platform."
   txCount: BigInt!
-
-  "Total trading volume in quote currency (e.g., USDC) for all tokens."
   volume: BigDecimal!
-
-  "Current total value locked (TVL) in quote currency across all tokens."
   liquidity: BigDecimal!
-
-  "Total revenue generated for the platform/treasury."
-  totalRevenue: BigDecimal!
 }
 
-# ===============================================================
-# Core Entities
-# ===============================================================
-
-"""
-Represents an external account (wallet) that interacts with the platform.
-"""
 type User @entity(immutable: false) {
-  id: ID! # The user's wallet address.
-  "The total number of transactions this user has initiated."
+  id: ID!
   txCount: BigInt!
-
-  # --- Affiliate Program ---
-  "The user who referred this user. This is a one-time link set on the user's first interaction. Can be null."
   referrer: User
-
-  "A list of all users this user has successfully referred. Derived from the 'referrer' field on other users."
   referrals: [User!]! @derivedFrom(field: "referrer")
-
-  # --- Derived Relationships ---
-  # These fields are not set directly. The subgraph builds these lists
-  # automatically based on relationships defined in other entities.
-
-  "A list of permissions this user has to create content for specific tokens. Derived from the 'Creator' entity."
   creator: [Creator!]! @derivedFrom(field: "user")
-
-  "A list of all Content NFTs (ERC721s) this user currently owns. Derived from the 'Content' entity."
   contentOwned: [ContentPosition!]! @derivedFrom(field: "owner")
-
-  "A list of all Content NFTs this user originally created. Derived from the 'Content' entity."
   contentCreated: [ContentPosition!]! @derivedFrom(field: "creator")
-
-  "A list of Token contracts where this user is the owner (e.g., from an Ownable contract). Derived from the 'Token' entity."
   tokensOwned: [Token!]! @derivedFrom(field: "owner")
-
-  "A list of this user's positions in various fungible tokens, including balance and contribution data. Derived from the 'TokenPosition' entity."
   tokenPositions: [TokenPosition!]! @derivedFrom(field: "user")
+  swaps: [Swap!]! @derivedFrom(field: "user")
 }
 
-"""
-Represents a single fungible token project on the platform, acting as a central hub
-for all its associated data, content, and market activity.
-"""
 type Token @entity(immutable: false) {
-  id: ID! # Address of the token contract.
-  name: String! # e.g., "My Awesome Project"
-  symbol: String! # e.g., "MAP"
-  uri: String! # URI for token metadata (e.g., IPFS link)
-  owner: User! # The owner of the token contract itself.
-  # --- Statistics ---
+  id: ID!
+  name: String!
+  symbol: String!
+  uri: String!
+  owner: User!
+
   txCount: BigInt!
   volume: BigDecimal!
   liquidity: BigDecimal!
   totalSupply: BigDecimal!
   marketCap: BigDecimal!
-  quoteReserve: BigDecimal! # The amount of quote currency (e.g., USDC) in the AMM pool.
-  tokenReserve: BigDecimal! # The amount of this token in the AMM pool.
-  marketPrice: BigDecimal! # Current price of the token in quote currency.
-  floorPrice: BigDecimal! # The initial price or a bonding curve floor price.
-  contribution: BigDecimal! # Total amount of quote currency contributed to the token.
-  holders: BigInt! # Count of unique token holders.
-  # --- Timestamps & Metadata ---
+  quoteVirtReserve: BigDecimal!
+  quoteRealReserve: BigDecimal!
+  tokenReserve: BigDecimal!
+  marketPrice: BigDecimal!
+  floorPrice: BigDecimal!
+  contribution: BigDecimal!
+  holders: BigInt!
+
+  treasuryRevenueQuote: BigDecimal!
+  treasuryRevenueToken: BigDecimal!
+  contentRevenueQuote: BigDecimal!
+  contentRevenueToken: BigDecimal!
+
   createdAtTimestamp: BigInt!
   createdAtBlockNumber: BigInt!
-  marketOpen: Boolean! # Is the token market currently active?
-  marketOpensAt: BigInt! # Timestamp for when the market opens.
-  # --- Permissions ---
-  "If true, anyone can create content. If false, only whitelisted users in the 'creators' list can."
+  marketOpen: Boolean!
+  marketOpensAt: BigInt!
+
   isPrivate: Boolean!
 
-  # --- Derived Relationships ---
-  "The whitelist of users who can create content if this token is private. Derived from the 'Creator' entity."
   creators: [Creator!]! @derivedFrom(field: "token")
 
-  "A list of all Content NFTs associated with this token. Derived from the 'Content' entity."
   contentPositions: [ContentPosition!]! @derivedFrom(field: "token")
 
-  "A list of all user positions in this token. Derived from the 'TokenPosition' entity."
   tokenPositions: [TokenPosition!]! @derivedFrom(field: "token")
+
+  swaps: [Swap!]! @derivedFrom(field: "token")
+  tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
+  tokenHourData: [TokenHourData!]! @derivedFrom(field: "token")
+  tokenMinuteData: [TokenMinuteData!]! @derivedFrom(field: "token")
 }
 
-# ===============================================================
-# Join / Link Entities
-# ===============================================================
+type TokenPosition @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  user: User!
+  contribution: BigDecimal!
+  balance: BigDecimal!
+  debt: BigDecimal!
+  creatorRevenueQuote: BigDecimal!
+  affiliateRevenueQuote: BigDecimal!
+  affiliateRevenueToken: BigDecimal!
+  curatorRevenueQuote: BigDecimal!
+  curatorRevenueToken: BigDecimal!
+}
+
+type ContentPosition @entity(immutable: false) {
+  id: ID!
+  contentId: BigInt!
+  token: Token!
+  creator: User!
+  owner: User!
+  price: BigDecimal!
+  nextPrice: BigDecimal!
+}
+
+type Swap @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  user: User!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  quoteIn: BigDecimal!
+  quoteOut: BigDecimal!
+  tokenIn: BigDecimal!
+  tokenOut: BigDecimal!
+  marketPrice: BigDecimal!
+  floorPrice: BigDecimal!
+}
+
+type TokenDayData @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  timestamp: BigInt!
+  marketPrice: BigDecimal!
+  floorPrice: BigDecimal!
+  volume: BigDecimal!
+}
+
+type TokenHourData @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  timestamp: BigInt!
+  marketPrice: BigDecimal!
+  floorPrice: BigDecimal!
+  volume: BigDecimal!
+}
+
+type TokenMinuteData @entity(immutable: false) {
+  id: ID!
+  token: Token!
+  timestamp: BigInt!
+  marketPrice: BigDecimal!
+  floorPrice: BigDecimal!
+  volume: BigDecimal!
+}
 
 type Creator @entity(immutable: false) {
-  id: ID! # A composite ID, e.g., "${token.id}-${user.id}"
-  user: User! # The whitelisted user.
-  token: Token! # The token they are allowed to create content for.
+  id: ID!
+  user: User!
+  token: Token!
 }
 
 type Sale @entity(immutable: false) {
@@ -128,35 +147,4 @@ type Content @entity(immutable: false) {
 type Rewarder @entity(immutable: false) {
   id: ID!
   token: Token!
-}
-
-# ===============================================================
-# Position Entities
-# ===============================================================
-
-type TokenPosition @entity(immutable: false) {
-  id: ID! # A composite ID, e.g., "${token.id}-${user.id}"
-  token: Token! # The token being held.
-  user: User! # The user who holds this position.
-  # --- Position-Specific Data ---
-  contribution: BigDecimal! # The total amount of quote currency the user has contributed.
-  balance: BigDecimal! # The user's current balance of the fungible token.
-  # --- Revenue Tracking ---
-  creatorRevenueQuote: BigDecimal!
-  affiliateRevenueQuote: BigDecimal!
-  affiliateRevenueToken: BigDecimal!
-  curatorRevenueQuote: BigDecimal!
-  curatorRevenueToken: BigDecimal!
-}
-
-type ContentPosition @entity(immutable: false) {
-  id: ID! # A composite ID, e.g., "${token.id}-${contentId}"
-  contentId: BigInt! # The unique tokenId from the ERC721 contract.
-  token: Token! # The parent Token this content belongs to.
-  # --- Ownership ---
-  creator: User! # The original minter of this content. This is immutable.
-  owner: User! # The current owner of this content. This will change on transfer.
-  # --- Pricing ---
-  price: BigDecimal! # The current price to purchase this content.
-  nextPrice: BigDecimal! # The price for the next purchase if on a bonding curve.
 }

@@ -8,9 +8,9 @@ dataSources:
     name: WaveFront
     network: base-sepolia
     source:
-      address: "0x3ea169bc579bF24673428bC710b22F06a8F4ff60"
+      address: "0xB1e7fAec47EddC3E9996Bf01488B409D0A853DE8"
       abi: WaveFront
-      startBlock: 29190684
+      startBlock: 29363156
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -42,7 +42,7 @@ templates:
       language: wasm/assemblyscript
       entities:
         - Directory
-          - User
+        - User
         - Token
         - TokenPosition
       abis:
@@ -56,3 +56,42 @@ templates:
         - event: Sale__Redeemed(indexed address,indexed address,uint256)
           handler: handleSale__Redeemed
       file: ./src/sale.ts
+  - kind: ethereum
+    name: Token
+    network: base-sepolia
+    source:
+      abi: Token
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Directory
+        - User
+        - Token
+        - TokenPosition
+      abis:
+        - name: Token
+          file: ./abis/Token.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleToken__Transfer
+        - event: Token__Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleToken__Swap
+        - event: Token__SyncReserves(uint256,uint256,uint256)
+          handler: handleToken__SyncReserves
+        - event: Token__HealReserves(uint256,uint256)
+          handler: handleToken__HealReserves
+        - event: Token__BurnReserves(uint256,uint256)
+          handler: handleToken__BurnReserves
+        - event: Token__ProviderFee(indexed address,uint256,uint256)
+          handler: handleToken__ProviderFee
+        - event: Token__TreasuryFee(indexed address,uint256,uint256)
+          handler: handleToken__TreasuryFee
+        - event: Token__ContentFee(indexed address,uint256,uint256)
+          handler: handleToken__ContentFee
+        - event: Token__Borrow(indexed address,indexed address,uint256)
+          handler: handleToken__Borrow
+        - event: Token__Repay(indexed address,indexed address,uint256)
+          handler: handleToken__Repay
+      file: ./src/token.ts

@@ -1,7 +1,7 @@
 import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts/index";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
-export const WAVEFRONT_ADDRESS = "0x3ea169bc579bF24673428bC710b22F06a8F4ff60";
+export const WAVEFRONT_ADDRESS = "0xB1e7fAec47EddC3E9996Bf01488B409D0A853DE8";
 
 export const ZERO_BI = BigInt.fromI32(0);
 export const ONE_BI = BigInt.fromI32(1);
@@ -11,14 +11,10 @@ export const BI_18 = BigInt.fromI32(18);
 
 export const ALMOST_ZERO_BD = BigDecimal.fromString("0.000001");
 
-export const INITIAL_LIQUIDITY = BigDecimal.fromString(
-  "1000000000000000000000000"
-);
-export const INITIAL_MARKET_CAP = BigDecimal.fromString(
-  "1000000000000000000000000"
-);
+export const INITIAL_LIQUIDITY = BigDecimal.fromString("200000");
+export const INITIAL_MARKET_CAP = BigDecimal.fromString("100000");
 export const INITIAL_PRICE = BigDecimal.fromString("0.001");
 export const INITIAL_TOTAL_SUPPLY = BigDecimal.fromString("1000000000");
 export const INITIAL_TOKEN_RESERVE = BigDecimal.fromString("1000000000");
-export const INITIAL_QUOTE_RESERVE = BigDecimal.fromString("100000");
+export const INITIAL_QUOTE_VIRT_RESERVE = BigDecimal.fromString("100000");
 export const SALE_DURATION = BigInt.fromI32(2 * 60 * 60);
