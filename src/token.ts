@@ -58,6 +58,7 @@ export function handleToken__Transfer(event: TransferEvent): void {
     whoTokenPosition.contribution = ZERO_BD;
     whoTokenPosition.balance = ZERO_BD;
     whoTokenPosition.debt = ZERO_BD;
+    whoTokenPosition.contentBalance = ZERO_BD;
     whoTokenPosition.creatorRevenueQuote = ZERO_BD;
     whoTokenPosition.ownerRevenueQuote = ZERO_BD;
     whoTokenPosition.affiliateRevenueQuote = ZERO_BD;
@@ -85,6 +86,7 @@ export function handleToken__Transfer(event: TransferEvent): void {
     toTokenPosition.contribution = ZERO_BD;
     toTokenPosition.balance = ZERO_BD;
     toTokenPosition.debt = ZERO_BD;
+    toTokenPosition.contentBalance = ZERO_BD;
     toTokenPosition.creatorRevenueQuote = ZERO_BD;
     toTokenPosition.ownerRevenueQuote = ZERO_BD;
     toTokenPosition.affiliateRevenueQuote = ZERO_BD;
@@ -336,6 +338,7 @@ export function handleToken__ProviderFee(event: Token__ProviderFeeEvent): void {
     tokenPosition.contribution = ZERO_BD;
     tokenPosition.balance = ZERO_BD;
     tokenPosition.debt = ZERO_BD;
+    tokenPosition.contentBalance = ZERO_BD;
     tokenPosition.creatorRevenueQuote = ZERO_BD;
     tokenPosition.ownerRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueQuote = ZERO_BD;

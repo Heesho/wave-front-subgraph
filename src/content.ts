@@ -103,7 +103,6 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
     convertTokenToDecimal(event.params.price, BigInt.fromI32(6))
   );
   token.txCount = token.txCount.plus(ONE_BI);
-  token.save();
 
   let contentPosition = ContentPosition.load(
     content.token + "-" + event.params.tokenId.toString()
@@ -133,6 +132,7 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
     creatorTokenPosition.contribution = ZERO_BD;
     creatorTokenPosition.balance = ZERO_BD;
     creatorTokenPosition.debt = ZERO_BD;
+    creatorTokenPosition.contentBalance = ZERO_BD;
     creatorTokenPosition.creatorRevenueQuote = ZERO_BD;
     creatorTokenPosition.ownerRevenueQuote = ZERO_BD;
     creatorTokenPosition.affiliateRevenueQuote = ZERO_BD;
@@ -158,6 +158,7 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
     ownerTokenPosition.contribution = ZERO_BD;
     ownerTokenPosition.balance = ZERO_BD;
     ownerTokenPosition.debt = ZERO_BD;
+    ownerTokenPosition.contentBalance = ZERO_BD;
     ownerTokenPosition.creatorRevenueQuote = ZERO_BD;
     ownerTokenPosition.ownerRevenueQuote = ZERO_BD;
     ownerTokenPosition.affiliateRevenueQuote = ZERO_BD;
@@ -170,6 +171,17 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
       surplus.div(BigDecimal.fromString("3"))
     );
   ownerTokenPosition.save();
+
+  token.creatorRewardsQuote = token.creatorRewardsQuote.plus(
+    surplus.div(BigDecimal.fromString("3"))
+  );
+  token.curatorRewardsQuote = token.curatorRewardsQuote.plus(
+    surplus.div(BigDecimal.fromString("3"))
+  );
+  token.holderRewardsQuote = token.holderRewardsQuote.plus(
+    surplus.div(BigDecimal.fromString("3"))
+  );
+  token.save();
 
   let curate = new Curate(event.transaction.hash.toHexString());
   curate.token = content.token;

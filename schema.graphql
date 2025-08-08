@@ -48,6 +48,10 @@ type Token @entity(immutable: false) {
   contents: BigInt!
   curateVolume: BigDecimal!
 
+  creatorRewardsQuote: BigDecimal!
+  curatorRewardsQuote: BigDecimal!
+  holderRewardsQuote: BigDecimal!
+
   treasuryRevenueQuote: BigDecimal!
   treasuryRevenueToken: BigDecimal!
   contentRevenueQuote: BigDecimal!
@@ -81,6 +85,7 @@ type TokenPosition @entity(immutable: false) {
   contribution: BigDecimal!
   balance: BigDecimal!
   debt: BigDecimal!
+  contentBalance: BigDecimal!
   creatorRevenueQuote: BigDecimal!
   ownerRevenueQuote: BigDecimal!
   affiliateRevenueQuote: BigDecimal!
@@ -132,11 +137,10 @@ type TokenMinuteData @entity(immutable: false) {
 
 type ContentPosition @entity(immutable: false) {
   id: ID!
-  contentId: BigInt!
+  tokenId: BigInt!
   token: Token!
   creator: User!
   owner: User!
-  tokenId: BigInt!
   uri: String!
   price: BigDecimal!
   nextPrice: BigDecimal!

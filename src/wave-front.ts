@@ -81,6 +81,10 @@ export function handleWaveFront__TokenCreated(
     token.contents = ZERO_BI;
     token.curateVolume = ZERO_BD;
 
+    token.creatorRewardsQuote = ZERO_BD;
+    token.curatorRewardsQuote = ZERO_BD;
+    token.holderRewardsQuote = ZERO_BD;
+
     token.treasuryRevenueQuote = ZERO_BD;
     token.treasuryRevenueToken = ZERO_BD;
     token.contentRevenueQuote = ZERO_BD;
@@ -132,6 +136,7 @@ export function handleWaveFront__TokenCreated(
     tokenPosition.contribution = ZERO_BD;
     tokenPosition.balance = ZERO_BD;
     tokenPosition.debt = ZERO_BD;
+    tokenPosition.contentBalance = ZERO_BD;
     tokenPosition.creatorRevenueQuote = ZERO_BD;
     tokenPosition.ownerRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueQuote = ZERO_BD;

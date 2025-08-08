@@ -2,6 +2,7 @@ import { BigDecimal, BigInt } from "@graphprotocol/graph-ts/index";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 export const WAVEFRONT_ADDRESS = "0xB1e7fAec47EddC3E9996Bf01488B409D0A853DE8";
+export const USDC_ADDRESS = "0x12e122fe10F367c522a854c02aE2d4680f2bC5a3";
 
 export const ZERO_BI = BigInt.fromI32(0);
 export const ONE_BI = BigInt.fromI32(1);
