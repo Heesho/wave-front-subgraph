@@ -1,4 +1,4 @@
-import { WaveFront__TokenCreated as WaveFront__TokenCreatedEvent } from "../generated/WaveFront/WaveFront";
+import { Core__TokenCreated as Core__TokenCreatedEvent } from "../generated/Core/Core";
 import {
   Token as TokenTemplate,
   Sale as SaleTemplate,
@@ -15,7 +15,7 @@ import {
   Rewarder,
 } from "../generated/schema";
 import {
-  WAVEFRONT_ADDRESS,
+  CORE_ADDRESS,
   ZERO_BI,
   ONE_BI,
   ZERO_BD,
@@ -29,12 +29,10 @@ import {
   ADDRESS_ZERO,
 } from "./constants";
 
-export function handleWaveFront__TokenCreated(
-  event: WaveFront__TokenCreatedEvent
-): void {
-  let directory = Directory.load(WAVEFRONT_ADDRESS);
+export function handleCore__TokenCreated(event: Core__TokenCreatedEvent): void {
+  let directory = Directory.load(CORE_ADDRESS);
   if (directory == null) {
-    directory = new Directory(WAVEFRONT_ADDRESS);
+    directory = new Directory(CORE_ADDRESS);
     directory.index = ZERO_BI;
     directory.txCount = ZERO_BI;
     directory.swapVolume = ZERO_BD;
@@ -79,6 +77,7 @@ export function handleWaveFront__TokenCreated(
     token.holders = ZERO_BI;
 
     token.contents = ZERO_BI;
+    token.contentBalance = ZERO_BD;
     token.curateVolume = ZERO_BD;
 
     token.creatorRewardsQuote = ZERO_BD;

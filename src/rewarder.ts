@@ -4,7 +4,7 @@ import {
   Rewarder__Withdrawn as Rewarder__WithdrawnEvent,
   Rewarder__RewardPaid as Rewarder__RewardPaidEvent,
 } from "../generated/templates/Rewarder/Rewarder";
-import { Rewarder, TokenPosition } from "../generated/schema";
+import { Rewarder, Token, TokenPosition } from "../generated/schema";
 import { ZERO_BD, USDC_ADDRESS } from "./constants";
 import { convertTokenToDecimal } from "./helpers";
 
@@ -12,14 +12,20 @@ export function handleRewarder__Deposited(
   event: Rewarder__DepositedEvent
 ): void {
   let rewarder = Rewarder.load(event.address.toHexString())!;
+  let token = Token.load(rewarder.token)!;
+  token.contentBalance = token.contentBalance.plus(
+    convertTokenToDecimal(event.params.amount, BigInt.fromI32(6))
+  );
+  token.save();
+
   let tokenPosition = TokenPosition.load(
-    rewarder.token + "-" + event.params.user.toHexString()
+    token.id + "-" + event.params.user.toHexString()
   );
   if (tokenPosition == null) {
     tokenPosition = new TokenPosition(
-      rewarder.token + "-" + event.params.user.toHexString()
+      token.id + "-" + event.params.user.toHexString()
     );
-    tokenPosition.token = rewarder.token;
+    tokenPosition.token = token.id;
     tokenPosition.user = event.params.user.toHexString();
     tokenPosition.contribution = ZERO_BD;
     tokenPosition.balance = ZERO_BD;
@@ -42,14 +48,20 @@ export function handleRewarder__Withdrawn(
   event: Rewarder__WithdrawnEvent
 ): void {
   let rewarder = Rewarder.load(event.address.toHexString())!;
+  let token = Token.load(rewarder.token)!;
+  token.contentBalance = token.contentBalance.minus(
+    convertTokenToDecimal(event.params.amount, BigInt.fromI32(6))
+  );
+  token.save();
+
   let tokenPosition = TokenPosition.load(
-    rewarder.token + "-" + event.params.user.toHexString()
+    token.id + "-" + event.params.user.toHexString()
   );
   if (tokenPosition == null) {
     tokenPosition = new TokenPosition(
-      rewarder.token + "-" + event.params.user.toHexString()
+      token.id + "-" + event.params.user.toHexString()
     );
-    tokenPosition.token = rewarder.token;
+    tokenPosition.token = token.id;
     tokenPosition.user = event.params.user.toHexString();
     tokenPosition.contribution = ZERO_BD;
     tokenPosition.balance = ZERO_BD;

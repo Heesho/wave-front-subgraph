@@ -46,6 +46,7 @@ type Token @entity(immutable: false) {
   holders: BigInt!
 
   contents: BigInt!
+  contentBalance: BigDecimal!
   curateVolume: BigDecimal!
 
   creatorRewardsQuote: BigDecimal!

@@ -26,7 +26,7 @@ import {
   ZERO_BD,
   ONE_BD,
   ONE_BI,
-  WAVEFRONT_ADDRESS,
+  CORE_ADDRESS,
 } from "./constants";
 import { convertTokenToDecimal } from "./helpers";
 
@@ -48,7 +48,7 @@ export function handleContent__Created(event: Content__CreatedEvent): void {
     userTo.save();
   }
 
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.contents = directory.contents.plus(ONE_BI);
   directory.txCount = directory.txCount.plus(ONE_BI);
   directory.save();
@@ -90,7 +90,7 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
     userTo.save();
   }
 
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.curateVolume = directory.curateVolume.plus(
     convertTokenToDecimal(event.params.price, BigInt.fromI32(6))
   );

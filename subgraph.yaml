@@ -5,12 +5,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: WaveFront
+    name: Core
     network: base-sepolia
     source:
-      address: "0xB1e7fAec47EddC3E9996Bf01488B409D0A853DE8"
-      abi: WaveFront
-      startBlock: 29363156
+      address: "0x20eFec197f8Dc18F57f1040effC56D7FbFEEc30d"
+      abi: Core
+      startBlock: 29590702
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -24,12 +24,12 @@ dataSources:
         - Content
         - Rewarder
       abis:
-        - name: WaveFront
-          file: ./abis/WaveFront.json
+        - name: Core
+          file: ./abis/Core.json
       eventHandlers:
-        - event: WaveFront__TokenCreated(string,string,string,uint256,address,address,address,address,indexed address,bool)
-          handler: handleWaveFront__TokenCreated
-      file: ./src/wave-front.ts
+        - event: Core__TokenCreated(string,string,string,uint256,address,address,address,address,indexed address,bool)
+          handler: handleCore__TokenCreated
+      file: ./src/core.ts
 templates:
   - kind: ethereum
     name: Sale

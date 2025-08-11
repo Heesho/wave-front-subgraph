@@ -16,12 +16,12 @@ import {
   ZERO_BI,
   ADDRESS_ZERO,
   ONE_BI,
-  WAVEFRONT_ADDRESS,
+  CORE_ADDRESS,
 } from "./constants";
 import { convertTokenToDecimal } from "./helpers";
 
 export function handleSale__Contributed(event: Sale__ContributedEvent): void {
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.txCount = directory.txCount.plus(ONE_BI);
   directory.save();
 

@@ -27,7 +27,7 @@ import {
   ADDRESS_ZERO,
   ZERO_BD,
   ALMOST_ZERO_BD,
-  WAVEFRONT_ADDRESS,
+  CORE_ADDRESS,
 } from "./constants";
 import { convertTokenToDecimal } from "./helpers";
 
@@ -109,7 +109,7 @@ export function handleToken__Transfer(event: TransferEvent): void {
 }
 
 export function handleToken__Swap(event: Token__SwapEvent): void {
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.txCount = directory.txCount.plus(ONE_BI);
   directory.swapVolume = directory.swapVolume.plus(
     convertTokenToDecimal(event.params.quoteInRaw, BigInt.fromI32(6))
@@ -258,7 +258,7 @@ export function handleToken__SyncReserves(
   token.marketCap = token.marketPrice.times(token.totalSupply);
   token.save();
 
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.liquidity = directory.liquidity
     .minus(initialLiquidity)
     .plus(token.liquidity);
@@ -283,7 +283,7 @@ export function handleToken__HealReserves(
   token.marketCap = token.marketPrice.times(token.totalSupply);
   token.save();
 
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.liquidity = directory.liquidity
     .minus(initialLiquidity)
     .plus(token.liquidity);
@@ -310,7 +310,7 @@ export function handleToken__BurnReserves(
   token.marketCap = token.marketPrice.times(token.totalSupply);
   token.save();
 
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.liquidity = directory.liquidity
     .minus(initialLiquidity)
     .plus(token.liquidity);
@@ -405,7 +405,7 @@ export function handleToken__Borrow(event: Token__BorrowEvent): void {
   );
   tokenPosition.save();
 
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.txCount = directory.txCount.plus(ONE_BI);
   directory.save();
 
@@ -440,7 +440,7 @@ export function handleToken__Repay(event: Token__RepayEvent): void {
   );
   tokenPosition.save();
 
-  let directory = Directory.load(WAVEFRONT_ADDRESS)!;
+  let directory = Directory.load(CORE_ADDRESS)!;
   directory.txCount = directory.txCount.plus(ONE_BI);
   directory.save();
 

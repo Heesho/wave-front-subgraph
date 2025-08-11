@@ -34,32 +34,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "address",
         "name": "newContentFactory",
         "type": "address"
       }
     ],
-    "name": "WaveFront__ContentFactorySet",
+    "name": "Core__ContentFactorySet",
     "type": "event"
   },
   {
@@ -72,7 +53,7 @@
         "type": "address"
       }
     ],
-    "name": "WaveFront__RewarderFactorySet",
+    "name": "Core__RewarderFactorySet",
     "type": "event"
   },
   {
@@ -85,7 +66,7 @@
         "type": "address"
       }
     ],
-    "name": "WaveFront__SaleFactorySet",
+    "name": "Core__SaleFactorySet",
     "type": "event"
   },
   {
@@ -152,7 +133,7 @@
         "type": "bool"
       }
     ],
-    "name": "WaveFront__TokenCreated",
+    "name": "Core__TokenCreated",
     "type": "event"
   },
   {
@@ -165,7 +146,7 @@
         "type": "address"
       }
     ],
-    "name": "WaveFront__TokenFactorySet",
+    "name": "Core__TokenFactorySet",
     "type": "event"
   },
   {
@@ -178,7 +159,26 @@
         "type": "address"
       }
     ],
-    "name": "WaveFront__TreasurySet",
+    "name": "Core__TreasurySet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
     "type": "event"
   },
   {
