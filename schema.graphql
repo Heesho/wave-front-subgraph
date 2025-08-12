@@ -153,6 +153,7 @@ type Curate @entity(immutable: false) {
   creator: User!
   prevOwner: User!
   user: User!
+  uri: String!
   blockNumber: BigInt!
   timestamp: BigInt!
   price: BigDecimal!

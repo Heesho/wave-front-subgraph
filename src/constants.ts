@@ -1,8 +1,8 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts/index";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
-export const CORE_ADDRESS = "0x20eFec197f8Dc18F57f1040effC56D7FbFEEc30d";
-export const USDC_ADDRESS = "0x5AaA726fa1d844D71Ebe0757705b86fAb8041526";
+export const CORE_ADDRESS = "0xDAd4AC347c08e05365f10Fd9B4CCD137bA18a39D";
+export const USDC_ADDRESS = "0x0113A749d4c3cb85ea0Bf3062b41C63acA669d2f";
 
 export const ZERO_BI = BigInt.fromI32(0);
 export const ONE_BI = BigInt.fromI32(1);

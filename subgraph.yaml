@@ -8,7 +8,7 @@ dataSources:
     name: Core
     network: base-sepolia
     source:
-      address: "0x20eFec197f8Dc18F57f1040effC56D7FbFEEc30d"
+      address: "0xDAd4AC347c08e05365f10Fd9B4CCD137bA18a39D"
       abi: Core
       startBlock: 29590702
     mapping:
