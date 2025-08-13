@@ -188,6 +188,7 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
   curate.creator = contentPosition.creator;
   curate.prevOwner = prevOwner;
   curate.user = userTo.id;
+  curate.tokenId = event.params.tokenId;
   curate.uri = contentPosition.uri;
   curate.blockNumber = event.block.number;
   curate.timestamp = event.block.timestamp;
