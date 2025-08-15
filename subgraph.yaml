@@ -8,9 +8,9 @@ dataSources:
     name: Core
     network: base-sepolia
     source:
-      address: "0xDAd4AC347c08e05365f10Fd9B4CCD137bA18a39D"
+      address: "0x82bFDeb5C5E4d15331973744A070400292579D75"
       abi: Core
-      startBlock: 29590702
+      startBlock: 29754023
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -118,10 +118,12 @@ templates:
           handler: handleContent__Curated
         - event: Content__CoverUriSet(string)
           handler: handleContent__CoverUriSet
-        - event: Content__IsPrivateSet(bool)
-          handler: handleContent__IsPrivateSet
-        - event: Content__CreatorsSet(indexed address,bool)
-          handler: handleContent__CreatorsSet
+        - event: Content__Approved(indexed address,indexed uint256)
+          handler: handleContent__Approved
+        - event: Content__IsModeratedSet(bool)
+          handler: handleContent__IsModeratedSet
+        - event: Content__ModeratorsSet(indexed address,bool)
+          handler: handleContent__ModeratorsSet
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleContent__OwnershipTransferred
       file: ./src/content.ts

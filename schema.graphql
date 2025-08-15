@@ -19,7 +19,7 @@ type User @entity(immutable: false) {
   tokenPositions: [TokenPosition!]! @derivedFrom(field: "user")
   swaps: [Swap!]! @derivedFrom(field: "user")
 
-  creator: [Creator!]! @derivedFrom(field: "user")
+  moderator: [Moderator!]! @derivedFrom(field: "user")
   contentOwned: [ContentPosition!]! @derivedFrom(field: "owner")
   contentCreated: [ContentPosition!]! @derivedFrom(field: "creator")
   curates: [Curate!]! @derivedFrom(field: "user")
@@ -63,7 +63,7 @@ type Token @entity(immutable: false) {
   marketOpen: Boolean!
   marketOpensAt: BigInt!
 
-  isPrivate: Boolean!
+  isModerated: Boolean!
 
   tokenPositions: [TokenPosition!]! @derivedFrom(field: "token")
   swaps: [Swap!]! @derivedFrom(field: "token")
@@ -71,7 +71,7 @@ type Token @entity(immutable: false) {
   tokenHourData: [TokenHourData!]! @derivedFrom(field: "token")
   tokenMinuteData: [TokenMinuteData!]! @derivedFrom(field: "token")
 
-  creators: [Creator!]! @derivedFrom(field: "token")
+  moderators: [Moderator!]! @derivedFrom(field: "token")
   contentPositions: [ContentPosition!]! @derivedFrom(field: "token")
   curates: [Curate!]! @derivedFrom(field: "token")
   contentDayData: [ContentDayData!]! @derivedFrom(field: "token")
@@ -145,6 +145,7 @@ type ContentPosition @entity(immutable: false) {
   uri: String!
   price: BigDecimal!
   nextPrice: BigDecimal!
+  isApproved: Boolean!
 }
 
 type Curate @entity(immutable: false) {
@@ -185,11 +186,11 @@ type ContentMinuteData @entity(immutable: false) {
   surplus: BigDecimal!
 }
 
-type Creator @entity(immutable: false) {
+type Moderator @entity(immutable: false) {
   id: ID!
   user: User!
   token: Token!
-  isCreator: Boolean!
+  isModerator: Boolean!
 }
 
 type Sale @entity(immutable: false) {

@@ -33,7 +33,7 @@
       },
       {
         "internalType": "bool",
-        "name": "_isPrivate",
+        "name": "_isModerated",
         "type": "bool"
       }
     ],
@@ -42,12 +42,27 @@
   },
   {
     "inputs": [],
+    "name": "Content__AlreadyApproved",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "Content__InvalidTokenId",
     "type": "error"
   },
   {
     "inputs": [],
+    "name": "Content__NotApproved",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "Content__NotCreator",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "Content__NotModerator",
     "type": "error"
   },
   {
@@ -133,6 +148,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "moderator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Content__Approved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "string",
         "name": "coverUri",
@@ -179,25 +213,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isCreator",
-        "type": "bool"
-      }
-    ],
-    "name": "Content__CreatorsSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "who",
         "type": "address"
       },
@@ -229,11 +244,30 @@
       {
         "indexed": false,
         "internalType": "bool",
-        "name": "isPrivate",
+        "name": "isModerated",
         "type": "bool"
       }
     ],
-    "name": "Content__IsPrivateSet",
+    "name": "Content__IsModeratedSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isModerator",
+        "type": "bool"
+      }
+    ],
+    "name": "Content__ModeratorsSet",
     "type": "event"
   },
   {
@@ -314,7 +348,7 @@
         "type": "address"
       }
     ],
-    "name": "account_IsCreator",
+    "name": "account_IsModerator",
     "outputs": [
       {
         "internalType": "bool",
@@ -352,6 +386,19 @@
       }
     ],
     "name": "approve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "approveContents",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -502,6 +549,25 @@
         "type": "uint256"
       }
     ],
+    "name": "id_IsApproved",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "id_Price",
     "outputs": [
       {
@@ -539,7 +605,7 @@
   },
   {
     "inputs": [],
-    "name": "isPrivate",
+    "name": "isModerated",
     "outputs": [
       {
         "internalType": "bool",
@@ -726,17 +792,12 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
-        "name": "accounts",
-        "type": "address[]"
-      },
-      {
         "internalType": "bool",
-        "name": "isCreator",
+        "name": "_isModerated",
         "type": "bool"
       }
     ],
-    "name": "setCreators",
+    "name": "setIsModerated",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -744,12 +805,17 @@
   {
     "inputs": [
       {
+        "internalType": "address[]",
+        "name": "accounts",
+        "type": "address[]"
+      },
+      {
         "internalType": "bool",
-        "name": "_isPrivate",
+        "name": "isModerator",
         "type": "bool"
       }
     ],
-    "name": "setIsPrivate",
+    "name": "setModerators",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

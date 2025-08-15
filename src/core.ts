@@ -94,7 +94,7 @@ export function handleCore__TokenCreated(event: Core__TokenCreatedEvent): void {
     token.marketOpen = false;
     token.marketOpensAt = event.block.timestamp.plus(SALE_DURATION);
 
-    token.isPrivate = event.params.isPrivate;
+    token.isModerated = event.params.isModerated;
   }
   token.txCount = token.txCount.plus(ONE_BI);
   token.save();

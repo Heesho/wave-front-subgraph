@@ -3,8 +3,9 @@ import {
   Content__Created as Content__CreatedEvent,
   Content__Curated as Content__CuratedEvent,
   Content__CoverUriSet as Content__CoverUriSetEvent,
-  Content__IsPrivateSet as Content__IsPrivateSetEvent,
-  Content__CreatorsSet as Content__CreatorsSetEvent,
+  Content__Approved as Content__ApprovedEvent,
+  Content__IsModeratedSet as Content__IsModeratedSetEvent,
+  Content__ModeratorsSet as Content__ModeratorsSetEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
 } from "../generated/templates/Content/Content";
 import {
@@ -14,7 +15,7 @@ import {
   Content,
   ContentPosition,
   TokenPosition,
-  Creator,
+  Moderator,
   Curate,
   ContentDayData,
   ContentHourData,
@@ -69,6 +70,11 @@ export function handleContent__Created(event: Content__CreatedEvent): void {
   contentPosition.uri = event.params.uri;
   contentPosition.price = ZERO_BD;
   contentPosition.nextPrice = ONE_BD;
+  if (token.isModerated) {
+    contentPosition.isApproved = false;
+  } else {
+    contentPosition.isApproved = true;
+  }
   contentPosition.save();
 }
 
@@ -253,17 +259,26 @@ export function handleContent__CoverUriSet(
   token.save();
 }
 
-export function handleContent__IsPrivateSet(
-  event: Content__IsPrivateSetEvent
+export function handleContent__Approved(event: Content__ApprovedEvent): void {
+  let content = Content.load(event.address.toHexString())!;
+  let contentPosition = ContentPosition.load(
+    content.token + "-" + event.params.tokenId.toString()
+  )!;
+  contentPosition.isApproved = true;
+  contentPosition.save();
+}
+
+export function handleContent__IsModeratedSet(
+  event: Content__IsModeratedSetEvent
 ): void {
   let content = Content.load(event.address.toHexString())!;
   let token = Token.load(content.token)!;
-  token.isPrivate = event.params.isPrivate;
+  token.isModerated = event.params.isModerated;
   token.save();
 }
 
-export function handleContent__CreatorsSet(
-  event: Content__CreatorsSetEvent
+export function handleContent__ModeratorsSet(
+  event: Content__ModeratorsSetEvent
 ): void {
   let user = User.load(event.params.account.toHexString());
   if (user == null) {
@@ -274,18 +289,18 @@ export function handleContent__CreatorsSet(
   }
 
   let content = Content.load(event.address.toHexString())!;
-  let creator = Creator.load(
+  let moderator = Moderator.load(
     content.token + "-" + event.params.account.toHexString()
   )!;
-  if (creator == null) {
-    creator = new Creator(
+  if (moderator == null) {
+    moderator = new Moderator(
       content.token + "-" + event.params.account.toHexString()
     );
-    creator.user = event.params.account.toString();
-    creator.token = content.token;
+    moderator.user = event.params.account.toString();
+    moderator.token = content.token;
   }
-  creator.isCreator = event.params.isCreator;
-  creator.save();
+  moderator.isModerator = event.params.isModerator;
+  moderator.save();
 }
 
 export function handleContent__OwnershipTransferred(
