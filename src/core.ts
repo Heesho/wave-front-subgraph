@@ -9,7 +9,6 @@ import {
   Token,
   TokenPosition,
   User,
-  Sale,
   Content,
   Rewarder,
 } from "../generated/schema";

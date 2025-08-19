@@ -200,11 +200,6 @@ type Moderator @entity(immutable: false) {
   isModerator: Boolean!
 }
 
-type Sale @entity(immutable: false) {
-  id: ID!
-  token: Token!
-}
-
 type Content @entity(immutable: false) {
   id: ID!
   token: Token!
