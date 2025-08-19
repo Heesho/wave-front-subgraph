@@ -1,7 +1,6 @@
 import { Core__TokenCreated as Core__TokenCreatedEvent } from "../generated/Core/Core";
 import {
   Token as TokenTemplate,
-  Sale as SaleTemplate,
   Content as ContentTemplate,
   Rewarder as RewarderTemplate,
 } from "../generated/templates";
@@ -25,7 +24,6 @@ import {
   INITIAL_PRICE,
   INITIAL_QUOTE_VIRT_RESERVE,
   INITIAL_TOKEN_RESERVE,
-  SALE_DURATION,
   ADDRESS_ZERO,
 } from "./constants";
 
@@ -73,7 +71,6 @@ export function handleCore__TokenCreated(event: Core__TokenCreatedEvent): void {
     token.tokenReserve = INITIAL_TOKEN_RESERVE;
     token.marketPrice = INITIAL_PRICE;
     token.floorPrice = INITIAL_PRICE;
-    token.contribution = ZERO_BD;
     token.holders = ZERO_BI;
 
     token.contents = ZERO_BI;
@@ -91,21 +88,11 @@ export function handleCore__TokenCreated(event: Core__TokenCreatedEvent): void {
 
     token.createdAtTimestamp = event.block.timestamp;
     token.createdAtBlockNumber = event.block.number;
-    token.marketOpen = false;
-    token.marketOpensAt = event.block.timestamp.plus(SALE_DURATION);
 
     token.isModerated = event.params.isModerated;
   }
   token.txCount = token.txCount.plus(ONE_BI);
   token.save();
-
-  SaleTemplate.create(event.params.sale);
-  let sale = Sale.load(event.params.sale.toHexString());
-  if (sale == null) {
-    sale = new Sale(event.params.sale.toHexString());
-    sale.token = event.params.token.toHexString();
-  }
-  sale.save();
 
   ContentTemplate.create(event.params.content);
   let content = Content.load(event.params.content.toHexString());
@@ -132,14 +119,23 @@ export function handleCore__TokenCreated(event: Core__TokenCreatedEvent): void {
     );
     tokenPosition.token = event.params.token.toHexString();
     tokenPosition.user = event.params.owner.toHexString();
-    tokenPosition.contribution = ZERO_BD;
     tokenPosition.balance = ZERO_BD;
     tokenPosition.debt = ZERO_BD;
+
+    tokenPosition.contentCreated = ZERO_BI;
+    tokenPosition.createdCurations = ZERO_BI;
+    tokenPosition.createdValue = ZERO_BD;
+
+    tokenPosition.contentOwned = ZERO_BI;
     tokenPosition.contentBalance = ZERO_BD;
+    tokenPosition.curationSpend = ZERO_BD;
+
     tokenPosition.creatorRevenueQuote = ZERO_BD;
     tokenPosition.ownerRevenueQuote = ZERO_BD;
+
     tokenPosition.affiliateRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueToken = ZERO_BD;
+
     tokenPosition.curatorRevenueQuote = ZERO_BD;
     tokenPosition.curatorRevenueToken = ZERO_BD;
   }

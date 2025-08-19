@@ -55,14 +55,23 @@ export function handleToken__Transfer(event: TransferEvent): void {
     whoTokenPosition = new TokenPosition(token.id + "-" + userWho.id);
     whoTokenPosition.token = token.id;
     whoTokenPosition.user = userWho.id;
-    whoTokenPosition.contribution = ZERO_BD;
     whoTokenPosition.balance = ZERO_BD;
     whoTokenPosition.debt = ZERO_BD;
+
+    whoTokenPosition.contentCreated = ZERO_BI;
+    whoTokenPosition.createdCurations = ZERO_BI;
+    whoTokenPosition.createdValue = ZERO_BD;
+
+    whoTokenPosition.contentOwned = ZERO_BI;
     whoTokenPosition.contentBalance = ZERO_BD;
+    whoTokenPosition.curationSpend = ZERO_BD;
+
     whoTokenPosition.creatorRevenueQuote = ZERO_BD;
     whoTokenPosition.ownerRevenueQuote = ZERO_BD;
+
     whoTokenPosition.affiliateRevenueQuote = ZERO_BD;
     whoTokenPosition.affiliateRevenueToken = ZERO_BD;
+
     whoTokenPosition.curatorRevenueQuote = ZERO_BD;
     whoTokenPosition.curatorRevenueToken = ZERO_BD;
   }
@@ -83,10 +92,17 @@ export function handleToken__Transfer(event: TransferEvent): void {
     toTokenPosition = new TokenPosition(token.id + "-" + userTo.id);
     toTokenPosition.token = token.id;
     toTokenPosition.user = userTo.id;
-    toTokenPosition.contribution = ZERO_BD;
     toTokenPosition.balance = ZERO_BD;
     toTokenPosition.debt = ZERO_BD;
+
+    toTokenPosition.contentCreated = ZERO_BI;
+    toTokenPosition.createdCurations = ZERO_BI;
+    toTokenPosition.createdValue = ZERO_BD;
+
+    toTokenPosition.contentOwned = ZERO_BI;
     toTokenPosition.contentBalance = ZERO_BD;
+    toTokenPosition.curationSpend = ZERO_BD;
+
     toTokenPosition.creatorRevenueQuote = ZERO_BD;
     toTokenPosition.ownerRevenueQuote = ZERO_BD;
     toTokenPosition.affiliateRevenueQuote = ZERO_BD;
@@ -335,10 +351,17 @@ export function handleToken__ProviderFee(event: Token__ProviderFeeEvent): void {
     );
     tokenPosition.token = event.address.toHexString();
     tokenPosition.user = event.params.to.toHexString();
-    tokenPosition.contribution = ZERO_BD;
     tokenPosition.balance = ZERO_BD;
     tokenPosition.debt = ZERO_BD;
+
+    tokenPosition.contentCreated = ZERO_BI;
+    tokenPosition.createdCurations = ZERO_BI;
+    tokenPosition.createdValue = ZERO_BD;
+
+    tokenPosition.contentOwned = ZERO_BI;
     tokenPosition.contentBalance = ZERO_BD;
+    tokenPosition.curationSpend = ZERO_BD;
+
     tokenPosition.creatorRevenueQuote = ZERO_BD;
     tokenPosition.ownerRevenueQuote = ZERO_BD;
     tokenPosition.affiliateRevenueQuote = ZERO_BD;

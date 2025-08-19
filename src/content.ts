@@ -70,12 +70,41 @@ export function handleContent__Created(event: Content__CreatedEvent): void {
   contentPosition.uri = event.params.uri;
   contentPosition.price = ZERO_BD;
   contentPosition.nextPrice = ONE_BD;
+  contentPosition.curationCount = ZERO_BI;
   if (token.isModerated) {
     contentPosition.isApproved = false;
   } else {
     contentPosition.isApproved = true;
   }
   contentPosition.save();
+
+  let tokenPosition = TokenPosition.load(token.id + "-" + userTo.id);
+  if (tokenPosition == null) {
+    tokenPosition = new TokenPosition(token.id + "-" + userTo.id);
+    tokenPosition.token = token.id;
+    tokenPosition.user = userTo.id;
+    tokenPosition.balance = ZERO_BD;
+    tokenPosition.debt = ZERO_BD;
+
+    tokenPosition.contentCreated = ZERO_BI;
+    tokenPosition.createdCurations = ZERO_BI;
+    tokenPosition.createdValue = ZERO_BD;
+
+    tokenPosition.contentOwned = ZERO_BI;
+    tokenPosition.contentBalance = ZERO_BD;
+    tokenPosition.curationSpend = ZERO_BD;
+
+    tokenPosition.creatorRevenueQuote = ZERO_BD;
+    tokenPosition.ownerRevenueQuote = ZERO_BD;
+
+    tokenPosition.affiliateRevenueQuote = ZERO_BD;
+    tokenPosition.affiliateRevenueToken = ZERO_BD;
+
+    tokenPosition.curatorRevenueQuote = ZERO_BD;
+    tokenPosition.curatorRevenueToken = ZERO_BD;
+  }
+  tokenPosition.contentCreated = tokenPosition.contentCreated.plus(ONE_BI);
+  tokenPosition.save();
 }
 
 export function handleContent__Curated(event: Content__CuratedEvent): void {
@@ -123,6 +152,7 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
   contentPosition.nextPrice = contentPosition.price
     .times(BigDecimal.fromString("1.1"))
     .plus(BigDecimal.fromString("1"));
+  contentPosition.curationCount = contentPosition.curationCount.plus(ONE_BI);
   contentPosition.save();
 
   let surplus = contentPosition.price.minus(prevPrice);
@@ -135,14 +165,23 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
     );
     creatorTokenPosition.token = content.token;
     creatorTokenPosition.user = contentPosition.creator;
-    creatorTokenPosition.contribution = ZERO_BD;
     creatorTokenPosition.balance = ZERO_BD;
     creatorTokenPosition.debt = ZERO_BD;
+
+    creatorTokenPosition.contentCreated = ZERO_BI;
+    creatorTokenPosition.createdCurations = ZERO_BI;
+    creatorTokenPosition.createdValue = ZERO_BD;
+
+    creatorTokenPosition.contentOwned = ZERO_BI;
     creatorTokenPosition.contentBalance = ZERO_BD;
+    creatorTokenPosition.curationSpend = ZERO_BD;
+
     creatorTokenPosition.creatorRevenueQuote = ZERO_BD;
     creatorTokenPosition.ownerRevenueQuote = ZERO_BD;
+
     creatorTokenPosition.affiliateRevenueQuote = ZERO_BD;
     creatorTokenPosition.affiliateRevenueToken = ZERO_BD;
+
     creatorTokenPosition.curatorRevenueQuote = ZERO_BD;
     creatorTokenPosition.curatorRevenueToken = ZERO_BD;
   }
@@ -150,33 +189,46 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
     creatorTokenPosition.creatorRevenueQuote.plus(
       surplus.div(BigDecimal.fromString("3"))
     );
+  creatorTokenPosition.createdCurations =
+    creatorTokenPosition.createdCurations.plus(ONE_BI);
+  creatorTokenPosition.createdValue =
+    creatorTokenPosition.createdValue.plus(surplus);
   creatorTokenPosition.save();
 
-  let ownerTokenPosition = TokenPosition.load(
+  let prevOwnerTokenPosition = TokenPosition.load(
     contentPosition.token + "-" + prevOwner
   );
-  if (ownerTokenPosition == null) {
-    ownerTokenPosition = new TokenPosition(
+  if (prevOwnerTokenPosition == null) {
+    prevOwnerTokenPosition = new TokenPosition(
       contentPosition.token + "-" + prevOwner
     );
-    ownerTokenPosition.token = content.token;
-    ownerTokenPosition.user = prevOwner;
-    ownerTokenPosition.contribution = ZERO_BD;
-    ownerTokenPosition.balance = ZERO_BD;
-    ownerTokenPosition.debt = ZERO_BD;
-    ownerTokenPosition.contentBalance = ZERO_BD;
-    ownerTokenPosition.creatorRevenueQuote = ZERO_BD;
-    ownerTokenPosition.ownerRevenueQuote = ZERO_BD;
-    ownerTokenPosition.affiliateRevenueQuote = ZERO_BD;
-    ownerTokenPosition.affiliateRevenueToken = ZERO_BD;
-    ownerTokenPosition.curatorRevenueQuote = ZERO_BD;
-    ownerTokenPosition.curatorRevenueToken = ZERO_BD;
+    prevOwnerTokenPosition.token = content.token;
+    prevOwnerTokenPosition.user = prevOwner;
+    prevOwnerTokenPosition.balance = ZERO_BD;
+    prevOwnerTokenPosition.debt = ZERO_BD;
+
+    prevOwnerTokenPosition.contentCreated = ZERO_BI;
+    prevOwnerTokenPosition.createdCurations = ZERO_BI;
+    prevOwnerTokenPosition.createdValue = ZERO_BD;
+
+    prevOwnerTokenPosition.contentOwned = ZERO_BI;
+    prevOwnerTokenPosition.contentBalance = ZERO_BD;
+    prevOwnerTokenPosition.curationSpend = ZERO_BD;
+
+    prevOwnerTokenPosition.creatorRevenueQuote = ZERO_BD;
+    prevOwnerTokenPosition.ownerRevenueQuote = ZERO_BD;
+
+    prevOwnerTokenPosition.affiliateRevenueQuote = ZERO_BD;
+    prevOwnerTokenPosition.affiliateRevenueToken = ZERO_BD;
+
+    prevOwnerTokenPosition.curatorRevenueQuote = ZERO_BD;
+    prevOwnerTokenPosition.curatorRevenueToken = ZERO_BD;
   }
-  ownerTokenPosition.ownerRevenueQuote =
-    ownerTokenPosition.ownerRevenueQuote.plus(
-      surplus.div(BigDecimal.fromString("3"))
-    );
-  ownerTokenPosition.save();
+  prevOwnerTokenPosition.ownerRevenueQuote =
+    prevOwnerTokenPosition.ownerRevenueQuote
+      .plus(prevPrice)
+      .plus(surplus.div(BigDecimal.fromString("3")));
+  prevOwnerTokenPosition.save();
 
   token.creatorRewardsQuote = token.creatorRewardsQuote.plus(
     surplus.div(BigDecimal.fromString("3"))

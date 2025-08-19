@@ -13,11 +13,6 @@
       },
       {
         "internalType": "address",
-        "name": "_saleFactory",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_contentFactory",
         "type": "address"
       },
@@ -100,12 +95,6 @@
         "indexed": false,
         "internalType": "address",
         "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "sale",
         "type": "address"
       },
       {
@@ -338,19 +327,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "saleFactory",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -372,19 +348,6 @@
       }
     ],
     "name": "setRewarderFactory",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_saleFactory",
-        "type": "address"
-      }
-    ],
-    "name": "setSaleFactory",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

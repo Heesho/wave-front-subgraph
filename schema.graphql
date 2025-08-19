@@ -42,7 +42,6 @@ type Token @entity(immutable: false) {
   tokenReserve: BigDecimal!
   marketPrice: BigDecimal!
   floorPrice: BigDecimal!
-  contribution: BigDecimal!
   holders: BigInt!
 
   contents: BigInt!
@@ -60,8 +59,6 @@ type Token @entity(immutable: false) {
 
   createdAtTimestamp: BigInt!
   createdAtBlockNumber: BigInt!
-  marketOpen: Boolean!
-  marketOpensAt: BigInt!
 
   isModerated: Boolean!
 
@@ -83,14 +80,23 @@ type TokenPosition @entity(immutable: false) {
   id: ID!
   token: Token!
   user: User!
-  contribution: BigDecimal!
   balance: BigDecimal!
   debt: BigDecimal!
+
+  contentCreated: BigInt!
+  createdCurations: BigInt!
+  createdValue: BigDecimal!
+
+  contentOwned: BigInt!
   contentBalance: BigDecimal!
+  curationSpend: BigDecimal!
+
   creatorRevenueQuote: BigDecimal!
   ownerRevenueQuote: BigDecimal!
+
   affiliateRevenueQuote: BigDecimal!
   affiliateRevenueToken: BigDecimal!
+
   curatorRevenueQuote: BigDecimal!
   curatorRevenueToken: BigDecimal!
 }
@@ -146,6 +152,7 @@ type ContentPosition @entity(immutable: false) {
   price: BigDecimal!
   nextPrice: BigDecimal!
   isApproved: Boolean!
+  curationCount: BigInt!
 }
 
 type Curate @entity(immutable: false) {
