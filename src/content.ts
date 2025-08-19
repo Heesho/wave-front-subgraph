@@ -32,18 +32,18 @@ import {
 import { convertTokenToDecimal } from "./helpers";
 
 export function handleContent__Created(event: Content__CreatedEvent): void {
-  let userWho = User.load(event.params.who.toHex());
+  let userWho = User.load(event.params.who.toHexString());
   if (!userWho) {
-    userWho = new User(event.params.who.toHex());
+    userWho = new User(event.params.who.toHexString());
     userWho.txCount = ZERO_BI;
     userWho.referrer = ADDRESS_ZERO;
   }
   userWho.txCount = userWho.txCount.plus(ONE_BI);
   userWho.save();
 
-  let userTo = User.load(event.params.to.toHex());
+  let userTo = User.load(event.params.to.toHexString());
   if (!userTo) {
-    userTo = new User(event.params.to.toHex());
+    userTo = new User(event.params.to.toHexString());
     userTo.txCount = ZERO_BI;
     userTo.referrer = ADDRESS_ZERO;
     userTo.save();
@@ -108,18 +108,18 @@ export function handleContent__Created(event: Content__CreatedEvent): void {
 }
 
 export function handleContent__Curated(event: Content__CuratedEvent): void {
-  let userWho = User.load(event.params.who.toHex());
+  let userWho = User.load(event.params.who.toHexString());
   if (!userWho) {
-    userWho = new User(event.params.who.toHex());
+    userWho = new User(event.params.who.toHexString());
     userWho.txCount = ZERO_BI;
     userWho.referrer = ADDRESS_ZERO;
   }
   userWho.txCount = userWho.txCount.plus(ONE_BI);
   userWho.save();
 
-  let userTo = User.load(event.params.to.toHex());
+  let userTo = User.load(event.params.to.toHexString());
   if (!userTo) {
-    userTo = new User(event.params.to.toHex());
+    userTo = new User(event.params.to.toHexString());
     userTo.txCount = ZERO_BI;
     userTo.referrer = ADDRESS_ZERO;
     userTo.save();
@@ -362,9 +362,9 @@ export function handleContent__OwnershipTransferred(
   if (content != null) {
     let token = Token.load(content.token)!;
 
-    let newOwner = User.load(event.params.newOwner.toHex());
+    let newOwner = User.load(event.params.newOwner.toHexString());
     if (newOwner == null) {
-      newOwner = new User(event.params.newOwner.toHex());
+      newOwner = new User(event.params.newOwner.toHexString());
       newOwner.txCount = ZERO_BI;
       newOwner.referrer = ADDRESS_ZERO;
       newOwner.save();
