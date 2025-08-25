@@ -236,9 +236,6 @@ export function handleContent__Curated(event: Content__CuratedEvent): void {
   token.curatorRewardsQuote = token.curatorRewardsQuote.plus(
     surplus.div(BigDecimal.fromString("3"))
   );
-  token.holderRewardsQuote = token.holderRewardsQuote.plus(
-    surplus.div(BigDecimal.fromString("3"))
-  );
   token.save();
 
   let curate = new Curate(event.transaction.hash.toHexString());

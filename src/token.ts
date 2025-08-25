@@ -297,6 +297,9 @@ export function handleToken__HealReserves(
   token.floorPrice = token.quoteVirtReserve.div(token.totalSupply);
   token.marketPrice = reserveQuote.div(token.tokenReserve);
   token.marketCap = token.marketPrice.times(token.totalSupply);
+  token.holderRewardsQuote = token.holderRewardsQuote.plus(
+    convertTokenToDecimal(event.params.quoteWad, BigInt.fromI32(18))
+  );
   token.save();
 
   let directory = Directory.load(CORE_ADDRESS)!;
@@ -324,6 +327,9 @@ export function handleToken__BurnReserves(
   token.floorPrice = token.quoteVirtReserve.div(token.totalSupply);
   token.marketPrice = reserveQuote.div(token.tokenReserve);
   token.marketCap = token.marketPrice.times(token.totalSupply);
+  token.holderRewardsToken = token.holderRewardsToken.plus(
+    convertTokenToDecimal(event.params.tokenAmt, BigInt.fromI32(18))
+  );
   token.save();
 
   let directory = Directory.load(CORE_ADDRESS)!;

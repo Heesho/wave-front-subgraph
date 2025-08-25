@@ -79,6 +79,7 @@ export function handleCore__TokenCreated(event: Core__TokenCreatedEvent): void {
     token.creatorRewardsQuote = ZERO_BD;
     token.curatorRewardsQuote = ZERO_BD;
     token.holderRewardsQuote = ZERO_BD;
+    token.holderRewardsToken = ZERO_BD;
 
     token.treasuryRevenueQuote = ZERO_BD;
     token.treasuryRevenueToken = ZERO_BD;

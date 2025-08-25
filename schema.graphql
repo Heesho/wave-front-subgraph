@@ -51,6 +51,7 @@ type Token @entity(immutable: false) {
   creatorRewardsQuote: BigDecimal!
   curatorRewardsQuote: BigDecimal!
   holderRewardsQuote: BigDecimal!
+  holderRewardsToken: BigDecimal!
 
   treasuryRevenueQuote: BigDecimal!
   treasuryRevenueToken: BigDecimal!
